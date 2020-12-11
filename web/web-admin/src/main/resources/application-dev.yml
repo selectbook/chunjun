@@ -7,7 +7,7 @@ nts:
 # 日志配置
 logging:
   # 日志保存路径
-  path: C://Users/shengwen/Desktop/startup/IIOTCloud/xiton-cloud/logs
+  path: C://xiton-cloud/logs
 
 # 数据源配置
 spring:
@@ -17,13 +17,9 @@ spring:
     druid:
       # 主库数据源
       master:
-        #        url: jdbc:mysql://localhost:3306/xiton-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        #url: jdbc:mysql://182.92.191.96:3306/xiton-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-        #url: jdbc:mysql://129.204.176.239:3066/xiton-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         url: jdbc:mysql://192.168.0.208:3306/xiton-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
 
         username: root
-        #        password: Xiton1688..
         password: password
       # 从库数据源
       slave:
