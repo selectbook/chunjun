@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtDeviceMapper">
+
+    <resultMap type="XtDevice" id="XtDeviceResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="devName" column="dev_name"/>
+        <result property="devDesc" column="dev_desc"/>
+        <result property="devType" column="dev_type"/>
+        <result property="devTypeId" column="dev_type_id"/>
+        <result property="devGroup" column="dev_group"/>
+        <result property="devGroupId" column="dev_group_id"/>
+        <result property="devCode" column="dev_code"/>
+        <result property="status" column="status"/>
+        <result property="oilCode" column="oil_code"/>
+        <result property="bindDeptId" column="bind_dept_id"/>
+        <result property="bindTime" column="bind_time"/>
+        <result property="register" column="register"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="workMod" column="work_mod"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectXtDeviceVo">
+        select id, dept_id, dev_name, dev_desc, dev_type, dev_type_id, dev_group, dev_group_id, dev_code, status, oil_code, bind_dept_id, bind_time, register, register_time, work_mod, province, city, address, del_flag, create_by, create_time, update_by, update_time from xt_device
+    </sql>
+
+
+    <select id="selectXtDeviceListAll" parameterType="XtDevice" resultMap="XtDeviceResult">
+        SELECT a.`id` AS `id`,a.`dept_id` AS `dept_id`,a.`dev_name` AS `dev_name`,a.`dev_desc` AS `dev_desc`
+        ,a.`dev_type` AS `dev_type`,a.`dev_type_id` AS `dev_type_id`,a.`dev_group` AS `dev_group`,
+        a.`dev_group_id` AS `dev_group_id`,a.`dev_code` AS `dev_code`,a.`status` AS `status`,
+        a.`oil_code` AS `oil_code`,a.`bind_dept_id` AS `bind_dept_id`,a.`bind_time` AS `bind_time`,
+        a.`register` AS `register`,a.`register_time` AS `register_time`,a.`work_mod` AS `work_mod`,
+        a.`province` AS `province`,a.`city` AS `city`,a.`address` AS `address`,a.`del_flag` AS `del_flag`,
+        a.`create_by` AS `create_by`,a.`create_time` AS `create_time`,a.`update_by` AS `update_by`,a.`update_time` AS
+        `update_time`
+        FROM `xt_device` a
+        --         inner JOIN `sys_user` u ON a.dept_id = u.dept_id
+        where a.del_flag = '0'
+        <!--            <if test="deptId != null ">and a.dept_id = #{deptId}</if>-->
+        <if test="deptId !=null">
+            and a.dept_id IN (
+            SELECT dept_id FROM `sys_dept`
+            WHERE dept_id = #{deptId}
+            UNION ALL
+            SELECT d.dept_id FROM `sys_dept` d
+            WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        </if>
+        <if test="devName != null  and devName != ''">and a.dev_name like concat('%', #{devName}, '%')</if>
+        <if test="devDesc != null  and devDesc != ''">and a.dev_desc = #{devDesc}</if>
+        <if test="devType != null  and devType != ''">and a.dev_type = #{devType}</if>
+        <if test="devTypeId != null ">and a.dev_type_id = #{devTypeId}</if>
+        <if test="devGroup != null  and devGroup != ''">and a.dev_group = #{devGroup}</if>
+        <if test="devGroupId != null ">and a.dev_group_id = #{devGroupId}</if>
+        <if test="devCode != null  and devCode != ''">and a.dev_code = #{devCode}</if>
+        <if test="status != null  and status != ''">and a.status = #{status}</if>
+        <if test="oilCode != null  and oilCode != ''">and a.oil_code = #{oilCode}</if>
+        <if test="bindDeptId != null ">and a.bind_dept_id = #{bindDeptId}</if>
+        <if test="bindTime != null ">and a.bind_time = #{bindTime}</if>
+        <if test="register != null  and register != ''">and a.register = #{register}</if>
+        <if test="registerTime != null ">and a.register_time = #{registerTime}</if>
+        <if test="workMod != null  and workMod != ''">and a.work_mod = #{workMod}</if>
+        <if test="province != null  and province != ''">and a.province = #{province}</if>
+        <if test="city != null  and city != ''">and a.city = #{city}</if>
+        <if test="address != null  and address != ''">and a.address = #{address}</if>
+    </select>
+
+    <select id="selectXtDeviceList" parameterType="com.iiot.business.bo.XtDeviceBoExport" resultMap="XtDeviceResult">
+        SELECT a.`id` AS `id`,a.`dept_id` AS `dept_id`,a.`dev_name` AS `dev_name`,a.`dev_desc` AS `dev_desc`
+        ,a.`dev_type` AS `dev_type`,a.`dev_type_id` AS `dev_type_id`,a.`dev_group` AS `dev_group`,
+        a.`dev_group_id` AS `dev_group_id`,a.`dev_code` AS `dev_code`,a.`status` AS `status`,
+        a.`oil_code` AS `oil_code`,a.`bind_dept_id` AS `bind_dept_id`,a.`bind_time` AS `bind_time`,
+        a.`register` AS `register`,a.`register_time` AS `register_time`,a.`work_mod` AS `work_mod`,
+        a.`province` AS `province`,a.`city` AS `city`,a.`address` AS `address`,a.`del_flag` AS `del_flag`,
+        a.`create_by` AS `create_by`,a.`create_time` AS `create_time`,a.`update_by` AS `update_by`,a.`update_time` AS
+        `update_time`
+        FROM `xt_device` a
+--         inner JOIN `sys_user` u ON a.dept_id = u.dept_id
+        where a.del_flag = '0'
+        <!--            <if test="deptId != null ">and a.dept_id = #{deptId}</if>-->
+        <if test="deptId !=null">
+            and a.dept_id IN (
+            SELECT dept_id FROM `sys_dept`
+            WHERE dept_id = #{deptId}
+            UNION ALL
+            SELECT d.dept_id FROM `sys_dept` d
+            WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        </if>
+        <if test="devName != null  and devName != ''">and concat(`dev_name`,`dev_code`) like concat('%', #{devName}, '%')</if>
+        <if test="devDesc != null  and devDesc != ''">and a.dev_desc = #{devDesc}</if>
+        <if test="devType != null  and devType != ''">and a.dev_type = #{devType}</if>
+        <if test="devTypeId != null ">and a.dev_type_id = #{devTypeId}</if>
+        <if test="devGroup != null  and devGroup != ''">and a.dev_group = #{devGroup}</if>
+        <if test="devGroupId != null ">and a.dev_group_id = #{devGroupId}</if>
+        <if test="devCode != null  and devCode != ''">and a.dev_code = #{devCode}</if>
+        <if test="status != null  and status != ''">and a.status = #{status}</if>
+        <if test="oilCode != null  and oilCode != ''">and a.oil_code = #{oilCode}</if>
+        <if test="bindDeptId != null ">and a.bind_dept_id = #{bindDeptId}</if>
+        <if test="bindTime != null ">and a.bind_time = #{bindTime}</if>
+        <if test="register != null  and register != ''">and a.register = #{register}</if>
+        <if test="registerTime != null ">and a.register_time = #{registerTime}</if>
+        <if test="workMod != null  and workMod != ''">and a.work_mod = #{workMod}</if>
+        <if test="province != null  and province != ''">and a.province = #{province}</if>
+        <if test="city != null  and city != ''">and a.city = #{city}</if>
+        <if test="address != null  and address != ''">and a.address = #{address}</if>
+        <if test="startTime !=null and startTime!=''">and a.create_time between #{startTime} </if>
+        <if test="endTime !=null and endTime!=''">and  #{endTime} </if>
+        ${params.dataScope}
+    </select>
+
+    <select id="selectXtDeviceById" parameterType="Long" resultMap="XtDeviceResult">
+        <include refid="selectXtDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectXtDeviceByDevCode" parameterType="String" resultMap="XtDeviceResult">
+        <include refid="selectXtDeviceVo"/>
+        where dev_code = #{devCode}
+    </select>
+
+    <insert id="insertXtDevice" parameterType="XtDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">dept_id,</if>
+            <if test="devName != null  and devName != ''">dev_name,</if>
+            <if test="devDesc != null  and devDesc != ''">dev_desc,</if>
+            <if test="devType != null  and devType != ''">dev_type,</if>
+            <if test="devTypeId != null ">dev_type_id,</if>
+            <if test="devGroup != null  and devGroup != ''">dev_group,</if>
+            <if test="devGroupId != null ">dev_group_id,</if>
+            <if test="devCode != null  and devCode != ''">dev_code,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="oilCode != null  and oilCode != ''">oil_code,</if>
+            <if test="bindDeptId != null ">bind_dept_id,</if>
+            <if test="bindTime != null ">bind_time,</if>
+            <if test="register != null  and register != ''">register,</if>
+            <if test="registerTime != null ">register_time,</if>
+            <if test="workMod != null  and workMod != ''">work_mod,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="devName != null  and devName != ''">#{devName},</if>
+            <if test="devDesc != null  and devDesc != ''">#{devDesc},</if>
+            <if test="devType != null  and devType != ''">#{devType},</if>
+            <if test="devTypeId != null ">#{devTypeId},</if>
+            <if test="devGroup != null  and devGroup != ''">#{devGroup},</if>
+            <if test="devGroupId != null ">#{devGroupId},</if>
+            <if test="devCode != null  and devCode != ''">#{devCode},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="oilCode != null  and oilCode != ''">#{oilCode},</if>
+            <if test="bindDeptId != null ">#{bindDeptId},</if>
+            <if test="bindTime != null ">#{bindTime},</if>
+            <if test="register != null  and register != ''">#{register},</if>
+            <if test="registerTime != null ">#{registerTime},</if>
+            <if test="workMod != null  and workMod != ''">#{workMod},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtDevice" parameterType="XtDevice">
+        update xt_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="devName != null  and devName != ''">dev_name = #{devName},</if>
+            <if test="devDesc != null  and devDesc != ''">dev_desc = #{devDesc},</if>
+            <if test="devType != null  and devType != ''">dev_type = #{devType},</if>
+            <if test="devTypeId != null ">dev_type_id = #{devTypeId},</if>
+            <if test="devGroup != null  and devGroup != ''">dev_group = #{devGroup},</if>
+            <if test="devGroupId != null ">dev_group_id = #{devGroupId},</if>
+            <if test="devCode != null  and devCode != ''">dev_code = #{devCode},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="oilCode != null  and oilCode != ''">oil_code = #{oilCode},</if>
+            <if test="bindDeptId != null ">bind_dept_id = #{bindDeptId},</if>
+            <if test="bindTime != null ">bind_time = #{bindTime},</if>
+            <if test="register != null  and register != ''">register = #{register},</if>
+            <if test="registerTime != null ">register_time = #{registerTime},</if>
+            <if test="workMod != null  and workMod != ''">work_mod = #{workMod},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtDeviceById" parameterType="Long">
+        delete from xt_device where id = #{id}
+    </delete>
+
+    <delete id="deleteXtDeviceByIds" parameterType="String">
+        delete from xt_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectXtDeviceByDeptId" parameterType="Long" resultMap="XtDeviceResult">
+        <include refid="selectXtDeviceVo"/>
+        where `del_flag` = 0
+        <if test="deptId != null ">
+            and dept_id = #{deptId}
+        </if>
+        <if test="size!=null">limit 0,#{size}</if>
+    </select>
+
+
+
+    <update id="updateXtDeviceById" parameterType="XtDevice">
+        update xt_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="devName != null  and devName != ''">dev_name = #{devName},</if>
+            <if test="devDesc != null  and devDesc != ''">dev_desc = #{devDesc},</if>
+            <if test="devType != null  and devType != ''">dev_type = #{devType},</if>
+            <if test="devTypeId != null ">dev_type_id = #{devTypeId},</if>
+            <if test="devGroup != null  and devGroup != ''">dev_group = #{devGroup},</if>
+            <if test="devGroupId != null ">dev_group_id = #{devGroupId},</if>
+            <if test="devCode != null">dev_code = #{devCode},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="oilCode != null">oil_code = #{oilCode},</if>
+            <if test="bindDeptId != null ">bind_dept_id = #{bindDeptId},</if>
+            <if test="bindTime != null ">bind_time = #{bindTime},</if>
+            <if test="register != null  and register != ''">register = #{register},</if>
+            <if test="registerTime != null ">register_time = #{registerTime},</if>
+            <if test="workMod != null  and workMod != ''">work_mod = #{workMod},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where dev_code = #{devCode}
+    </update>
+
+    <select id="selectCountByGroupId" resultType="Integer" parameterType="Long">
+        select count(*) from xt_device
+        where dev_group_id = #{devGroupId} and `del_flag` = 0
+    </select>
+
+    <select id="selectDevicesByStatus" resultType="Integer" parameterType="String">
+        select count(*) from xt_device where status = #{status}
+    </select>
+
+
+
+</mapper>

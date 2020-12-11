@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改机油加注')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-oilFill-edit" th:object="${xtOilFill}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">终端编号：</label>
+                <div class="col-sm-8">
+                    <input name="devCode" th:field="*{devCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">工作模式：</label>
+                <div class="col-sm-8">
+                    <input name="workMod" th:field="*{workMod}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设定加注量：</label>
+                <div class="col-sm-8">
+                    <input name="settingAmount" th:field="*{settingAmount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">当前加注量：</label>
+                <div class="col-sm-8">
+                    <input name="currentAmount" th:field="*{currentAmount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总加注量：</label>
+                <div class="col-sm-8">
+                    <input name="totalAmount" th:field="*{totalAmount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">实际总加注量：</label>
+                <div class="col-sm-8">
+                    <input name="realTotalAmount" th:field="*{realTotalAmount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">油桶容量：</label>
+                <div class="col-sm-8">
+                    <input name="tankCapacity" th:field="*{tankCapacity}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">油桶余量：</label>
+                <div class="col-sm-8">
+                    <input name="remainAmount" th:field="*{remainAmount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">终端状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box">
+                        <input type="radio" name="devStatus" value="">
+                        <label th:for="devStatus" th:text="未知"></label>
+                    </div>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">终端IP地址：</label>
+                <div class="col-sm-8">
+                    <input name="ipaddr" th:field="*{ipaddr}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">终端时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="localTime" th:value="${#dates.format(xtOilFill.localTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "business/oilFill";
+        $("#form-oilFill-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-oilFill-edit').serialize());
+            }
+        }
+
+        $("input[name='localTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改设备字段')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <style>
+        #parentId {
+            width: 130px;
+            margin-left: 14px;
+        }
+
+        #deptId {
+            margin-left: 10px;
+            width: 130px;
+        }
+
+        #parentId2 {
+            margin-left: 10px;
+            width: 130px;
+        }
+
+        #deptAll {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-device-edit" th:object="${xtDevice}">
+        <input name="id" id="id" th:field="*{id}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">部门：*</label>
+            <div id="deptAll">
+                <select name="deptId" id="parentId" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${sysDepts}" th:text="${dict.deptName}" th:value="${dict.deptId}">
+                    </option>
+                </select>
+                <select name="deptId" id="parentId2" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                </select>
+                <select name="deptId" id="deptId" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备名称：*</label>
+            <div class="col-sm-8">
+                <input name="devName" id="devName" th:field="*{devName}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备描述：</label>
+            <div class="col-sm-8">
+                <input name="devDesc" id="devDesc" th:field="*{devDesc}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备类型：*</label>
+            <div class="col-sm-8">
+                <select name="devType" id="devType" class="form-control m-b">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${devTypes}" th:text="${dict.devType}" th:value="${dict.devTypeId}">
+                </select>
+                <!--                <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备分组：*</label>
+            <div class="col-sm-8">
+                <select name="devGroup" id="devGroup" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${xtGroups}" th:text="${dict.devGroup}" th:value="${dict.id}">
+                    </option>
+                </select>
+                <!--                    <input name="devGroup" class="form-control" type="text">-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备编号：*</label>
+            <div class="col-sm-8">
+                <input name="devCode" id="devCode" th:field="*{devCode}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">油桶编号：</label>
+            <div class="col-sm-8">
+                <input name="oilCode" id="oilCode" th:field="*{oilCode}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">工作模式：*</label>
+            <div class="col-sm-8">
+                <select name="workMod" id="workMod" th:with="type=${@dict.getType('work_mod')}"
+                        class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}">
+                    </option>
+                </select>
+                <!--                    <input name="workMod" class="form-control" type="text">-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">所在省份：</label>
+            <div class="col-sm-8">
+                <input name="province" id="province" th:field="*{province}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">所在城市：</label>
+            <div class="col-sm-8">
+                <input name="city" id="city" th:field="*{city}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">详细地址：</label>
+            <div class="col-sm-8">
+                <input name="address" id="address" th:field="*{address}" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "business/device";
+    var checkDevCode = true;    //判断设备编号是否重复
+    var checkOilCode = true;
+    var oldDevice;
+    var oldDrum;
+    $("#form-device-edit").validate({
+        focusCleanup: true
+    });
+
+    $(function () {
+        //获取设备编号
+        oldDevice = $("#devCode").val();
+        //获取油桶编号
+        oldDrum = $("#oilCode").val();
+    })
+
+    //当下拉框的属性发生变化
+    $("#parentId").on("change", function () {
+        var url = prefix + "/selectDeptDrop?parentId=" + $(this).val();
+        $.ajax({
+            type: 'post',
+            url: url,
+            dataType: 'json',
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#parentId2").find("option[value!='']").remove();
+                $("#deptId").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#parentId2").append("<option value=" + result[i].deptId + ">" + result[i].deptName + "</option>");
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+
+    //当下拉框的属性发生变化
+    $("#parentId2").on("change", function () {
+        var url = prefix + "/selectDeptDrop?parentId=" + $(this).val();
+        $.ajax({
+            type: 'post',
+            url: url,
+            dataType: 'json',
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#deptId").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#deptId").append("<option value=" + result[i].deptId + ">" + result[i].deptName + "</option>");
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+    function checkByDevCode(devCode) {
+        var url = prefix + "/selectDeviceByDevCode/" + devCode;
+        $.ajax({
+            type: 'get',
+            url: url,
+            dataType: 'json',
+            async: false,
+            contentType: "application/json",
+            success: function (data) {
+                checkDevCode = data.data;
+            }, error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function checkByOilCode(oilCode) {
+        console.log("123"+oilCode)
+        if (oilCode != null && oilCode != '') {
+            var url = prefix + "/selectDeviceByOilCode/" + oilCode;
+            $.ajax({
+                type: 'get',
+                url: url,
+                dataType: 'json',
+                async: false,
+                contentType: "application/json",
+                success: function (data) {
+                    checkOilCode = data.data;
+                }, error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    }
+
+
+    function submitHandler() {
+        var serializer = "";
+        var deptId = 0;
+        //获取修改的id
+        var id = $("#id").val();
+        //3个下拉框*
+        var parentId1 = $("#parentId").find("option:selected").val();
+        var parentId2 = $("#parentId2").find("option:selected").val();
+        var parentId3 = $("#deptId").find("option:selected").val();
+        //获取设备名称*
+        var devName = $("#devName").val();
+        //获取设备描述
+        var devDesc = $("#devDesc").val();
+        //获取设备类型*
+        var devType = $("#devType").find("option:selected");
+        //获取设备分组*
+        var devGroup = $("#devGroup").find("option:selected");
+        //获取设备编号
+        var devCode = $("#devCode").val();
+        //获取油桶编号
+        var oilCode = $("#oilCode").val();
+        //获取工作模式*
+        var workMod = $("#workMod").find("option:selected");
+        //获取所在省份
+        var province = $("#province").val();
+        //获取所在城市
+        var city = $("#city").val();
+        //获取所在地址
+        var address = $("#address").val();
+        //如果下拉框为空
+        if (parentId1 == null || parentId1 == '') {
+            $.modal.msgError("请选择部门");
+            return;
+        }
+
+
+        if (devName == null || devName == '') {
+            $.modal.msgError("请输入设备名称");
+            return;
+        }
+
+        if (devType.val() == null || devType.val() == '') {
+            $.modal.msgError("请选择设备类型");
+            return;
+        }
+
+        if (devGroup.val() == null || devGroup.val() == '') {
+            $.modal.msgError("请选择设备分组");
+            return;
+        }
+
+        if (devCode == null || devCode == '') {
+            $.modal.msgError("请选择设备编号");
+            return;
+        }
+
+        if (workMod.val() == null || workMod.val() == '') {
+            $.modal.msgError("请选择工作模式");
+            return;
+        }
+
+        //判断是否存在
+        this.checkByDevCode(devCode);
+        if (checkDevCode == false && oldDevice != devCode) {
+            $.modal.msgError("设备编号,已存在,请换一个");
+            return;
+        }
+
+        //判断是否存在
+        this.checkByOilCode(oilCode);
+        if (checkOilCode == false && oldDrum != oilCode) {
+            $.modal.msgError("油桶编号,已存在,请换一个");
+            return;
+        }
+
+        if (parentId1 != null && parentId1 != '') {
+            deptId = parentId1;
+        }
+
+        if (parentId2 != null && parentId2 != '') {
+            deptId = parentId2;
+        }
+
+        if (parentId3 != null && parentId3 != '') {
+            deptId = parentId3;
+        }
+
+        serializer = "id=" + id + "&deptId=" + deptId + "&devName=" + devName + "&devDesc=" + devDesc + "&devType="
+            + devType.text() + "&devTypeId=" + devType.val() + "&devGroup=" + devGroup.text() + "&devGroupId=" + devGroup.val()
+            + "&devCode=" + devCode + "&oilCode=" + oilCode + "&workMod=" + workMod.val() + "&province=" + province + "&city=" + city
+            + "&address=" + address;
+
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", serializer);
+        }
+    }
+
+    $("input[name='bindTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='registerTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+</script>
+</body>
+</html>

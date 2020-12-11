@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改车型机油保养字段')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <style>
+        #brand {
+            margin-left: 13px;
+            width: 230px;
+        }
+
+    </style>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-carUpkeep-edit" th:object="${xtCarUpkeep}">
+        <input name="id" id="id" th:field="*{id}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">首字母：*</label>
+            <div class="col-sm-8">
+                <input name="firstLetter" id="firstLetter" th:field="*{firstLetter}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">品牌：*</label>
+            <select name="brand" id="brand" class="form-control col-sm-4">
+                <option value="">所有</option>
+                <option th:each="dict : ${xtCarUpkeeps}" th:text="${dict.brand}" th:value="${dict.brand}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">车系：*</label>
+            <div class="col-sm-8">
+                <select name="series" id="series" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">厂商：*</label>
+            <div class="col-sm-8">
+                <input name="vendor" id="vendor" th:field="*{vendor}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">年款：*</label>
+            <div class="col-sm-8">
+                <select name="annual" id="annual" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">车型：*</label>
+            <div class="col-sm-8">
+                <select name="models" id="models" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用量：*</label>
+            <div class="col-sm-8">
+                <input name="dosage" id="dosage" th:field="*{dosage}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">建议：*</label>
+            <div class="col-sm-8">
+                <input name="advice" id="advice" th:field="*{advice}" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    var prefix = ctx + "business/carUpkeep";
+    $("#form-carUpkeep-edit").validate({
+        focusCleanup: true
+    });
+
+    //如果品牌列表改变,显示相应的车系
+    $("#brand").on("change", function () {
+        var url = prefix + "/selectOptionXtCarUpKeepGroupByBrand?brand=" + $(this).val();
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#series").find("option[value!='']").remove();
+                $("#annual").find("option[value!='']").remove();
+                $("#models").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#series").append("<option value=" + result[i].seriesId + ">" + result[i].series + "</option>")
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+    //如果车系列表改变显示对应的年款
+    $("#series").on("change", function () {
+        var url = prefix + "/selectOptionXtCarUpKeepGroupBySeriesId?seriesId=" + $(this).val();
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#annual").find("option[value!='']").remove();
+                $("#models").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#annual").append("<option value=" + result[i].annualId + ">" + result[i].annual + "</option>")
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    //selectOptionXtCarUpKeepGroupByAnnualId
+    //如果年款列表改变显示对应的车型
+    $("#annual").on("change", function () {
+        var url = prefix + "/selectOptionXtCarUpKeepGroupByAnnualId?annualId=" + $(this).val();
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#models").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#models").append("<option value=" + result[i].modelsId + ">" + result[i].models + "</option>")
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    function submitHandler() {
+        var serializer = "";
+        //获取id
+        var id = $("#id").val();
+        //获取首字母*
+        var firstLetter = $("#firstLetter").val();
+        //获取品牌*
+        var brand = $("#brand").find("option:selected").val();
+        //获取车系*
+        var series = $("#series").find("option:selected");
+        //获取厂商*
+        var vendor = $("#vendor").val();
+        //获取年款*
+        var annual = $("#annual").find("option:selected");
+        //获取车型*
+        var models = $("#models").find("option:selected");
+        //获取用量*
+        var dosage = $("#dosage").val();
+        //获取建议*
+        var advice = $("#advice").val();
+
+        if (firstLetter == null || firstLetter == '') {
+            $.modal.msgError("请输入首字母");
+            return;
+        }
+
+        if (brand == null || brand == '') {
+            $.modal.msgError("请选择品牌");
+            return;
+        }
+
+        if (series.val() == null || series.val() == '') {
+            $.modal.msgError("请选择车系");
+            return;
+
+        }
+
+        if (vendor == null || vendor == '') {
+            $.modal.msgError("请输入厂商");
+            return;
+        }
+
+        if (annual.val() == null || annual.val() == '') {
+            $.modal.msgError("请选择年款");
+            return;
+        }
+
+
+        if (models.val() == null || models.val() == '') {
+            $.modal.msgError("请选择车型");
+            return;
+        }
+
+        if (dosage == null || dosage == '') {
+            $.modal.msgError("请输入用量");
+            return;
+        }
+
+
+        if (advice == null || advice == '') {
+            $.modal.msgError("请输入建议");
+            return;
+        }
+
+        serializer = "id=" + id + "&firstLetter=" + firstLetter + "&brand=" + brand + "&series=" + series.text() + "&seriesId="
+            + series.val() + "&vendor=" + vendor + "&annual=" + annual.text() + "&annualId=" + annual.val() + "&models="
+            + models.text() + "&modelsId=" + models.val() + "&dosage=" + dosage + "&advice=" + advice;
+
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", serializer);
+        }
+    }
+</script>
+</body>
+</html>

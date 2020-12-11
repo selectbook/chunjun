@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtGroupMapper">
+    
+    <resultMap type="XtGroup" id="XtGroupResult">
+        <result property="id"    column="id"    />
+        <result property="devGroup"    column="dev_group"    />
+    </resultMap>
+
+    <sql id="selectXtGroupVo">
+        select id, dev_group from xt_group
+    </sql>
+
+    <select id="selectXtGroupList" parameterType="XtGroup" resultMap="XtGroupResult">
+        <include refid="selectXtGroupVo"/>
+        <where>  
+            <if test="devGroup != null  and devGroup != ''"> and dev_group = #{devGroup}</if>
+        </where>
+    </select>
+    
+    <select id="selectXtGroupById" parameterType="Long" resultMap="XtGroupResult">
+        <include refid="selectXtGroupVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertXtGroup" parameterType="XtGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="devGroup != null  and devGroup != ''">dev_group,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="devGroup != null  and devGroup != ''">#{devGroup},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXtGroup" parameterType="XtGroup">
+        update xt_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="devGroup != null  and devGroup != ''">dev_group = #{devGroup},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtGroupById" parameterType="Long">
+        delete from xt_group where id = #{id}
+    </delete>
+
+    <delete id="deleteXtGroupByIds" parameterType="String">
+        delete from xt_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

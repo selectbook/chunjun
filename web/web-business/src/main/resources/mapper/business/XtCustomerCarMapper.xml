@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtCustomerCarMapper">
+    
+    <resultMap type="XtCustomerCar" id="XtCustomerCarResult">
+        <result property="id"    column="id"    />
+        <result property="brandSeries"    column="brand_series"    />
+        <result property="devCode"    column="dev_code"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="currentAmount"    column="current_amount"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="settingAmount"    column="setting_amount"    />
+        <result property="carKilometre"    column="car_kilometre"    />
+        <result property="reallizeAmout"    column="reallize_amout"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectXtCustomerCarVo">
+        select id, brand_series, dev_code, customer_id, license_plate, current_amount, total_amount, setting_amount, car_kilometre, reallize_amout, create_by, create_time, update_by, update_time from xt_customer_car
+    </sql>
+
+    <select id="selectXtCustomerCarList" parameterType="XtCustomerCar" resultMap="XtCustomerCarResult">
+        <include refid="selectXtCustomerCarVo"/>
+        <where>  
+            <if test="brandSeries != null  and brandSeries != ''"> and brand_series = #{brandSeries}</if>
+            <if test="devCode != null  and devCode != ''"> and dev_code = #{devCode}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+            <if test="currentAmount != null "> and current_amount = #{currentAmount}</if>
+            <if test="totalAmount != null "> and total_amount = #{totalAmount}</if>
+            <if test="settingAmount != null "> and setting_amount = #{settingAmount}</if>
+            <if test="carKilometre != null  and carKilometre != ''"> and car_kilometre = #{carKilometre}</if>
+            <if test="reallizeAmout != null "> and reallize_amout = #{reallizeAmout}</if>
+        </where>
+    </select>
+    
+    <select id="selectXtCustomerCarById" parameterType="Long" resultMap="XtCustomerCarResult">
+        <include refid="selectXtCustomerCarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertXtCustomerCar" parameterType="XtCustomerCar">
+        insert into xt_customer_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="brandSeries != null  and brandSeries != ''">brand_series,</if>
+            <if test="devCode != null  and devCode != ''">dev_code,</if>
+            <if test="customerId != null ">customer_id,</if>
+            <if test="licensePlate != null  and licensePlate != ''">license_plate,</if>
+            <if test="currentAmount != null ">current_amount,</if>
+            <if test="totalAmount != null ">total_amount,</if>
+            <if test="settingAmount != null ">setting_amount,</if>
+            <if test="carKilometre != null  and carKilometre != ''">car_kilometre,</if>
+            <if test="reallizeAmout != null ">reallize_amout,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="brandSeries != null  and brandSeries != ''">#{brandSeries},</if>
+            <if test="devCode != null  and devCode != ''">#{devCode},</if>
+            <if test="customerId != null ">#{customerId},</if>
+            <if test="licensePlate != null  and licensePlate != ''">#{licensePlate},</if>
+            <if test="currentAmount != null ">#{currentAmount},</if>
+            <if test="totalAmount != null ">#{totalAmount},</if>
+            <if test="settingAmount != null ">#{settingAmount},</if>
+            <if test="carKilometre != null  and carKilometre != ''">#{carKilometre},</if>
+            <if test="reallizeAmout != null ">#{reallizeAmout},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXtCustomerCar" parameterType="XtCustomerCar">
+        update xt_customer_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandSeries != null  and brandSeries != ''">brand_series = #{brandSeries},</if>
+            <if test="devCode != null  and devCode != ''">dev_code = #{devCode},</if>
+            <if test="customerId != null ">customer_id = #{customerId},</if>
+            <if test="licensePlate != null  and licensePlate != ''">license_plate = #{licensePlate},</if>
+            <if test="currentAmount != null ">current_amount = #{currentAmount},</if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="settingAmount != null ">setting_amount = #{settingAmount},</if>
+            <if test="carKilometre != null  and carKilometre != ''">car_kilometre = #{carKilometre},</if>
+            <if test="reallizeAmout != null ">reallize_amout = #{reallizeAmout},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <delete id="deleteXtCustomerCarById" parameterType="Long">
+        delete from xt_customer_car where id = #{id}
+    </delete>
+
+    <delete id="deleteXtCustomerCarByIds" parameterType="String">
+        delete from xt_customer_car where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateXtCustomerCarByCustomerId" parameterType="XtCustomerCar">
+        update xt_customer_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandSeries != null  and brandSeries != ''">brand_series = #{brandSeries},</if>
+            <if test="devCode != null  and devCode != ''">dev_code = #{devCode},</if>
+            <if test="licensePlate != null  and licensePlate != ''">license_plate = #{licensePlate},</if>
+            <if test="currentAmount != null ">current_amount = #{currentAmount},</if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="settingAmount != null ">setting_amount = #{settingAmount},</if>
+            <if test="carKilometre != null  and carKilometre != ''">car_kilometre = #{carKilometre},</if>
+            <if test="reallizeAmout != null ">reallize_amout = #{reallizeAmout},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where customer_id = #{customerId}
+    </update>
+
+    <select id="selectXtCustomerCarByCustomerId" parameterType="Long" resultMap="XtCustomerCarResult">
+        <include refid="selectXtCustomerCarVo"/>
+        where customer_id = #{customerId}
+    </select>
+
+
+    <delete id="deleteXtCustomerCarByCustomerIds" parameterType="String">
+        delete from xt_customer_car where customer_id in
+        <foreach item="customerId" collection="array" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </delete>
+
+</mapper>

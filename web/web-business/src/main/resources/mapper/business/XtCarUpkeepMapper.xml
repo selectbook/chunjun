@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtCarUpkeepMapper">
+
+    <resultMap type="XtCarUpkeep" id="XtCarUpkeepResult">
+        <result property="id" column="id"/>
+        <result property="firstLetter" column="first_letter"/>
+        <result property="brand" column="brand"/>
+        <result property="series" column="series"/>
+        <result property="seriesId" column="series_id"/>
+        <result property="vendor" column="vendor"/>
+        <result property="annual" column="annual"/>
+        <result property="annualId" column="annual_id"/>
+        <result property="models" column="models"/>
+        <result property="modelsId" column="models_id"/>
+        <result property="dosage" column="dosage"/>
+        <result property="advice" column="advice"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectXtCarUpkeepVo">
+        select id, first_letter, brand, series, series_id, vendor, annual, annual_id, models, models_id, dosage, advice, del_flag, create_by, create_time, update_by, update_time from xt_car_upkeep
+    </sql>
+
+    <select id="selectXtCarUpkeepList" parameterType="XtCarUpkeep" resultMap="XtCarUpkeepResult">
+        <include refid="selectXtCarUpkeepVo"/>
+        <where>
+            <if test="firstLetter != null  and firstLetter != ''">and first_letter = #{firstLetter}</if>
+            <if test="brand != null  and brand != ''">and brand = #{brand}</if>
+            <if test="series != null  and series != ''">and series = #{series}</if>
+            <if test="seriesId != null ">and series_id = #{seriesId}</if>
+            <if test="vendor != null  and vendor != ''">and vendor = #{vendor}</if>
+            <if test="annual != null  and annual != ''">and annual = #{annual}</if>
+            <if test="annualId != null ">and annual_id = #{annualId}</if>
+            <if test="models != null  and models != ''">and models = #{models}</if>
+            <if test="modelsId != null ">and models_id = #{modelsId}</if>
+            <if test="dosage != null  and dosage != ''">and dosage = #{dosage}</if>
+            <if test="advice != null  and advice != ''">and advice = #{advice}</if>
+        </where>
+    </select>
+
+    <select id="selectXtCarUpkeepById" parameterType="Long" resultMap="XtCarUpkeepResult">
+        <include refid="selectXtCarUpkeepVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertXtCarUpkeep" parameterType="XtCarUpkeep" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_car_upkeep
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="firstLetter != null  and firstLetter != ''">first_letter,</if>
+            <if test="brand != null  and brand != ''">brand,</if>
+            <if test="series != null  and series != ''">series,</if>
+            <if test="seriesId != null ">series_id,</if>
+            <if test="vendor != null  and vendor != ''">vendor,</if>
+            <if test="annual != null  and annual != ''">annual,</if>
+            <if test="annualId != null ">annual_id,</if>
+            <if test="models != null  and models != ''">models,</if>
+            <if test="modelsId != null ">models_id,</if>
+            <if test="dosage != null  and dosage != ''">dosage,</if>
+            <if test="advice != null  and advice != ''">advice,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="firstLetter != null  and firstLetter != ''">#{firstLetter},</if>
+            <if test="brand != null  and brand != ''">#{brand},</if>
+            <if test="series != null  and series != ''">#{series},</if>
+            <if test="seriesId != null ">#{seriesId},</if>
+            <if test="vendor != null  and vendor != ''">#{vendor},</if>
+            <if test="annual != null  and annual != ''">#{annual},</if>
+            <if test="annualId != null ">#{annualId},</if>
+            <if test="models != null  and models != ''">#{models},</if>
+            <if test="modelsId != null ">#{modelsId},</if>
+            <if test="dosage != null  and dosage != ''">#{dosage},</if>
+            <if test="advice != null  and advice != ''">#{advice},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtCarUpkeep" parameterType="XtCarUpkeep">
+        update xt_car_upkeep
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="firstLetter != null  and firstLetter != ''">first_letter = #{firstLetter},</if>
+            <if test="brand != null  and brand != ''">brand = #{brand},</if>
+            <if test="series != null  and series != ''">series = #{series},</if>
+            <if test="seriesId != null ">series_id = #{seriesId},</if>
+            <if test="vendor != null  and vendor != ''">vendor = #{vendor},</if>
+            <if test="annual != null  and annual != ''">annual = #{annual},</if>
+            <if test="annualId != null ">annual_id = #{annualId},</if>
+            <if test="models != null  and models != ''">models = #{models},</if>
+            <if test="modelsId != null ">models_id = #{modelsId},</if>
+            <if test="dosage != null  and dosage != ''">dosage = #{dosage},</if>
+            <if test="advice != null  and advice != ''">advice = #{advice},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtCarUpkeepById" parameterType="Long">
+        delete from xt_car_upkeep where id = #{id}
+    </delete>
+
+    <delete id="deleteXtCarUpkeepByIds" parameterType="String">
+        delete from xt_car_upkeep where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectXtCarUpkeepGroup" resultMap="XtCarUpkeepResult">
+        <!--这段为了解决生产环境mysql8和其他测试环境mysql版本不一样,导致的分组语法错误-->
+        -- SET SESSION sql_mode    ='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION ';
+        SELECT id,brand,advice AS advice,dosage FROM `xt_car_upkeep`
+        GROUP BY brand
+    </select>
+
+
+    <select id="selectOptionXtCarUpKeepGroupByBrand" resultMap="XtCarUpkeepResult">
+        <include refid="selectXtCarUpkeepVo"/>
+        where brand = #{brand}
+        group by series_id
+    </select>
+
+
+    <select id="selectOptionXtCarUpKeepGroupBySeriesId" resultMap="XtCarUpkeepResult">
+        <include refid="selectXtCarUpkeepVo"/>
+        where series_id = #{seriesId}
+        group by annual_id
+    </select>
+
+
+    <select id="selectOptionXtCarUpKeepGroupByAnnualId" resultMap="XtCarUpkeepResult">
+        <include refid="selectXtCarUpkeepVo"/>
+        where annual_id = #{annualId}
+        group by models_id
+    </select>
+
+</mapper>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('二微码')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #upload {
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <img src="" id="imgQrCode">
+    <input type="hidden" id="code" th:value="${id}">
+    <input type="hidden" id="oilCode" th:value="${oilCode}">
+    <button type="button" id="upload"
+            onclick="downloadImage('/business/oilDrum/uploadQrCode/'+$('#code').val(),$('#oilCode').val())"
+            class="btn btn-success">下载
+    </button>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script>
+    function getQrCode() {
+        var val = $("#code").val();
+        var url = '/business/oilDrum/uploadQrCode/' + val;
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", url, true);
+        xhr.responseType = "blob";
+        xhr.setRequestHeader("client_type", "DESKTOP_WEB");
+        xhr.onload = function () {
+            if (this.status == 200) {
+                var blob = this.response;
+                var img = document.createElement("img");
+                img.onload = function (e) {
+                    window.URL.revokeObjectURL(img.src);
+                };
+                img.src = window.URL.createObjectURL(blob);
+                $("#imgQrCode").attr("src", img.src);
+            }
+        }
+        xhr.send();
+        // $.ajax({
+        //     type: 'get',
+        //     url: url,
+        //     responseType: 'blob',
+        //     success: function (data) {
+        //        // var blob = new Blob([data],{"image/png"});
+        //        // var url =  window.URL.createObjectURL(blob);
+        //        console.log(data);
+        //     }, error: function (data) {
+        //         console.log("error:" + data)
+        //     }
+        //
+        // })
+
+    }
+
+    /**
+     * 下载图片地址和图片名
+     * @param imgsrc
+     * @param name
+     */
+    function downloadImage(imgsrc, name) {//下载图片地址和图片名
+        let image = new Image();
+        // 解决跨域 Canvas 污染问题
+        image.setAttribute("crossOrigin", "anonymous");
+        image.onload = function () {
+            let canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            let context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, image.width, image.height);
+            let url = canvas.toDataURL("image/jpg"); //得到图片的base64编码数据
+            let a = document.createElement("a"); // 生成一个a元素
+            let event = new MouseEvent("click"); // 创建一个单击事件
+            a.download = name + ".png" || "photo" + ".png"; // 设置图片名称
+            a.href = url; // 将生成的URL设置为a.href属性
+            a.dispatchEvent(event); // 触发a的单击事件
+        };
+        image.src = imgsrc;
+    }
+
+    getQrCode();
+
+</script>
+</body>
+</html>

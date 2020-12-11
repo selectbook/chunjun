@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtCustomerMapper">
+    
+    <resultMap type="XtCustomer" id="XtCustomerResult">
+        <result property="id"    column="id"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="customerName"    column="customer_name"    />
+    </resultMap>
+
+    <sql id="selectXtCustomerVo">
+        select id, contact_person, company_name, phone, address, create_by, create_time, update_by, update_time, customer_name from xt_customer
+    </sql>
+
+    <select id="selectXtCustomerList" parameterType="XtCustomer" resultMap="XtCustomerResult">
+        <include refid="selectXtCustomerVo"/>
+        <where>  
+            <if test="contactPerson != null  and contactPerson != ''"> and contact_person = #{contactPerson}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectXtCustomerById" parameterType="Long" resultMap="XtCustomerResult">
+        <include refid="selectXtCustomerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertXtCustomer" parameterType="XtCustomer" useGeneratedKeys="true" keyProperty="id"  keyColumn="id">
+        insert into xt_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contactPerson != null  and contactPerson != ''">contact_person,</if>
+            <if test="companyName != null  and companyName != ''">company_name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="customerName != null  and customerName != ''">customer_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contactPerson != null  and contactPerson != ''">#{contactPerson},</if>
+            <if test="companyName != null  and companyName != ''">#{companyName},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="customerName != null  and customerName != ''">#{customerName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXtCustomer" parameterType="XtCustomer">
+        update xt_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contactPerson != null  and contactPerson != ''">contact_person = #{contactPerson},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="customerName != null  and customerName != ''">customer_name = #{customerName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtCustomerById" parameterType="Long">
+        delete from xt_customer where id = #{id}
+    </delete>
+
+    <delete id="deleteXtCustomerByIds" parameterType="String">
+        delete from xt_customer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

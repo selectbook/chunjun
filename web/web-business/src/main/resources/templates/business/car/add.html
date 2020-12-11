@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增客户车型')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-car-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">品牌：</label>
+                <div class="col-sm-8">
+                    <input name="brandSeries" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编号：</label>
+                <div class="col-sm-8">
+                    <input name="devCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">客户id：</label>
+                <div class="col-sm-8">
+                    <input name="customerId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">车牌号：</label>
+                <div class="col-sm-8">
+                    <input name="licensePlate" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">当前加注量：</label>
+                <div class="col-sm-8">
+                    <input name="currentAmount" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总加注量：</label>
+                <div class="col-sm-8">
+                    <input name="totalAmount" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设定量：</label>
+                <div class="col-sm-8">
+                    <input name="settingAmount" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">行驶公里：</label>
+                <div class="col-sm-8">
+                    <input name="carKilometre" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">实定量：</label>
+                <div class="col-sm-8">
+                    <input name="reallizeAmout" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "business/car"
+        $("#form-car-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-car-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('机油加注列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+</head>
+<style type="text/css">
+
+
+    body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        font-family: "微软雅黑";
+        font-size: 14px;
+    }
+
+    #l-map {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+    }
+
+
+    li {
+        line-height: 28px;
+    }
+
+
+    .map_popup .popup_main {
+        background: #fff;
+        border: 1px solid #8BA4D8;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        z-index: 2;
+    }
+
+    .map_popup .title {
+        background: url("//") repeat scroll 0 0 transparent;
+        color: #6688CC;
+        font-weight: bold;
+        height: 24px;
+        line-height: 25px;
+        padding-left: 7px;
+    }
+
+    .map_popup button {
+        background: url("//map.baidu.com/img/popup_close.gif") no-repeat scroll 0 0 transparent;
+        cursor: pointer;
+        height: 12px;
+        position: absolute;
+        right: 4px;
+        top: 6px;
+        width: 12px;
+    }
+
+    #group:after,
+    #group:before {
+        content: '';
+        clear: both;
+        display: table;
+    }
+
+    #group {
+        padding: 0px;
+    }
+
+    #group li {
+        float: left;
+        list-style-type: none;
+
+    }
+
+    .card-body {
+        width: 143px;
+    }
+
+    .card-body span {
+        margin-left: 3px;
+        padding-left: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+
+    .card-body:hover {
+        color: CornflowerBlue;
+        background-color: Lavender;
+    }
+
+    .devname {
+        color: black;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+</style>
+<!-- 引入百度地图API密钥 -->
+<script type="text/javascript"
+        th:src="${'https://api.map.baidu.com/api?v=2.0&ak=nHu6X1bEbjXlV4QWx9PM7zFCtpatfkA5'}"
+        src="https://api.map.baidu.com/api?v=2.0&ak=nHu6X1bEbjXlV4QWx9PM7zFCtpatfkA5"></script>
+<body class="gray-bg">
+
+
+<div class="ui-layout-west">
+    <div class="box box-main">
+        <div class="box-header pre-scrollable">
+            <div class="box-title">
+                <i class="fa icon-grid"></i> 组织机构
+            </div>
+            <div class="box-tools pull-right">
+                <a type="button" class="btn btn-box-tool" href="#" onclick="dept()" title="管理部门"><i
+                        class="fa fa-edit"></i></a>
+                <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;"><i
+                        class="fa fa-chevron-up"></i></button>
+                <button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠"><i
+                        class="fa fa-chevron-down"></i></button>
+                <button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新部门"><i
+                        class="fa fa-refresh"></i></button>
+            </div>
+
+            <div class="ui-layout-content">
+                <div id="tree" class="ztree"></div>
+            </div>
+            <div id="group-context">
+                <ul id="group" class="nav nav-tabs">
+                    <li class="active" th:style="'width:' + ${'60px'}" th:value="${0}"><a
+                            th:style="'font-size:' + ${'8px'}"
+                            href="#tab0" data-toggle="tab">全部</a>
+                    </li>
+                    <li th:style="'width:' + ${'60px'}" th:value="${1}"><a href="#tab1"
+                                                                           th:style="'font-size:' + ${'8px'}"
+                                                                           data-toggle="tab">在线</a>
+                    </li>
+                    <li th:style="'width:' + ${'60px'}" th:value="${2}"><a href="#tab2"
+                                                                           th:style="'font-size:' + ${'8px'}"
+                                                                           data-toggle="tab">离线</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active card" id="tab0">
+                        <div class='re'></div>
+                    </div>
+                    <div class="tab-pane card" id="tab1">
+                        <div class='re'></div>
+                    </div>
+                    <div class="tab-pane card" id="tab2">
+                        <div class='re'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <input type="hidden" id="deptId" name="deptId">
+                <input type="hidden" id="parentId" name="parentId">
+                <!-- 保留用户当前经纬度和位置名称的值到页面上 -->
+                <!--  显示地图 -->
+                <div id="l-map"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: layout-latest-js"/>
+<th:block th:include="include :: ztree-js"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('business:oilFill:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('business:oilFill:remove')}]];
+    var prefix = ctx + "business/position";
+
+    //百度地图功能
+    var map = new BMap.Map("l-map");   //创建地图Map实例
+    map.centerAndZoom(new BMap.Point(100.1883, 25.7794), 4)   // 初始化地图,设置中心点坐标和地图级别
+    function mapColl() {
+        //添加地图控件
+        map.enableScrollWheelZoom();
+        map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+        map.addControl(new BMap.MapTypeControl({
+            mapTypes: [
+                BMAP_NORMAL_MAP,
+                BMAP_HYBRID_MAP
+            ]
+        }));
+        map.setCurrentCity("北京");   //设置地图显示的城市,必须设置
+        map.enableScrollWheelZoom(true);    //开启鼠标缩放
+        map.addControl(new BMap.NavigationControl()); //缩放控件
+    }
+
+    //绘制百度地图
+    mapColl();
+    $(function () {
+        var panehHidden = false;
+        if ($(this).width() < 769) {
+            panehHidden = true;
+        }
+        $('body').layout({initClosed: panehHidden, west__size: 185});
+        queryDeptTree();
+        queryDevType(0);
+        translateCallBack(null, 1);
+    });
+
+    //标志
+    function makerFun(point, infoWindows) {
+        var markers = new BMap.Marker(point);
+        map.addOverlay(markers);
+        // markers.setLabel(label);
+        markers.addEventListener("click", function (e) {
+            map.openInfoWindow(infoWindows, point);//参数：窗口、点  根据点击的点出现对应的窗口
+        })
+    }
+
+    //百度地图设备
+    function translateCallBack(deviceCode, code) {
+        //创建标注
+        var devicePositionVo = {
+            deptId: $("#deptId").val(),
+            devCode: deviceCode
+        };
+        var points = [];
+        $.ajax({
+            type: 'post',
+            url: prefix + '/mapList',
+            dataType: 'json',
+            contentType: "application/json",
+            data: JSON.stringify(devicePositionVo),
+            success: function (data) {
+                points = data.data;
+                for (var i = 0; i < points.length; i++) {
+                    var pointInfo = new BMap.Point(points[i].longitude, points[i].latitude);
+                    var opts = {
+                        width: 250, //宽度
+                        height: 120 //高度
+                    };
+                    // var label = new BMap.Label( {
+                    //     offset: new BMap.Size(25, 5)
+                    // });
+                    var infoWindows = new BMap.InfoWindow('<p style="width:280px;margin:0;line-height:20px;">名称:' + points[i].devCode + '<br/>经度:' + points[i].longitude + '<br/>纬度:' + points[i].latitude + '<br/>定位时间:' + points[i].gpsTime + '<br/>设备IP:' + points[i].ipaddr + '<br/>地址:' + points[i].address + '</p>', opts);
+                    if (code == 1) {
+                        //1.显示地图,不显示标注详细信息
+                        makerFun(pointInfo, infoWindows);
+                    } else if (code == 2) {
+                        //2.显示地图,显示标注详细信息
+                        map.openInfoWindow(infoWindows, pointInfo);//参数：窗口、点  根据点击的点出现对应的窗口
+                    }
+
+                }
+            }, error: function (data) {
+                console.log("error:" + data)
+            }
+        })
+    }
+
+    //全部设备
+    function queryDevType(typeId) {
+        var url = ctx + "business/device/listType";
+
+        var xtDevice = {
+            status: typeId,
+        };
+
+        $("#tab" + typeId + ">.re div").remove();
+        $.ajax({
+            type: 'post',
+            contentType: "application/json",
+            data: JSON.stringify(xtDevice),
+            url: url,
+            dataType: 'json',
+            success: function (data) {
+                //1这个是查询设备
+                var rows = data.rows;
+                for (var i = 0; i < rows.length; i++) {
+                    var dom = "<div class='card-body' value=" + data.rows[i].devCode + "   >" + "<span class='glyphicon glyphicon-scale' ><font  class='devname'>" + data.rows[i].devName + "</font></span><br></div>  ";
+                    $("#tab" + typeId).find(".re").append(dom);
+                }
+            }, error: function (data) {
+                console.log("error:" + data)
+            }
+        })
+    }
+
+
+    function queryDeptTree() {
+        var url = ctx + "system/dept/treeData";
+        var options = {
+            url: url,
+            expandLevel: 2,
+            onClick: zOnClick
+        };
+
+        $.tree.init(options);
+
+        //点击组织结构
+        function zOnClick(event, treeId, treeNode) {
+            $("#deptId").val(treeNode.id);
+            $("#parentId").val(treeNode.pId);
+            //重构百度地图功能
+            map = new BMap.Map("l-map");   //创建地图Map实例
+            map.centerAndZoom(new BMap.Point(100.1883, 25.7794), 4)   // 初始化地图,设置中心点坐标和地图级别
+            mapColl();  //地图初始化
+            translateCallBack(null, 1);   //Ajax重新请求数据
+        }
+    }
+
+
+    $("body").on("click", ".card-body", function () {
+        translateCallBack($(this).attr('value'), 2);
+    });
+    //点击在线离线
+    $("#group li").click(function () {
+        // $("#tab"+$(this).val()).siblings(".tab-pane card").find(".re").find(".card-body").remove();
+        queryDevType($(this).val());
+    });
+
+    //刷新部门
+    $('#btnRefresh').click(function () {
+        queryDeptTree();
+    });
+</script>
+<!--定时自动刷新，content表示刷新间隔，单位为秒s，下面代码表示页面每隔三秒刷新一次-->
+<!--<meta http-equiv="refresh" content="10">-->
+</body>
+</html>

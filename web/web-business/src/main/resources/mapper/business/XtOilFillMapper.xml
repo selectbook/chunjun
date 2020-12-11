@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtOilFillMapper">
+
+    <resultMap type="XtOilFill" id="XtOilFillResult">
+        <result property="id" column="id"/>
+        <result property="devCode" column="dev_code"/>
+        <result property="workMod" column="work_mod"/>
+        <result property="settingAmount" column="setting_amount"/>
+        <result property="currentAmount" column="current_amount"/>
+        <result property="realTotalAmount" column="real_total_amount"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="tankCapacity" column="tank_capacity"/>
+        <result property="remainAmount" column="remain_amount"/>
+        <result property="devStatus" column="dev_status"/>
+        <result property="ipaddr" column="ipaddr"/>
+        <result property="localTime" column="local_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+    <resultMap type="com.iiot.business.vo.OilFillDeptVo" id="OilFillDeptVoResult">
+        <result property="id" column="id"/>
+        <result property="devCode" column="dev_code"/>
+        <result property="workMod" column="work_mod"/>
+        <result property="settingAmount" column="setting_amount"/>
+        <result property="currentAmount" column="current_amount"/>
+        <result property="realTotalAmount" column="real_total_amount"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="tankCapacity" column="tank_capacity"/>
+        <result property="remainAmount" column="remain_amount"/>
+        <result property="devStatus" column="dev_status"/>
+        <result property="ipaddr" column="ipaddr"/>
+        <result property="localTime" column="local_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="registerAddress" column="register_address"></result>
+        <result property="positionAddress" column="position_address"></result>
+    </resultMap>
+
+    <sql id="selectXtOilFillVo">
+        select id, dev_code, work_mod, setting_amount, current_amount, total_amount, tank_capacity, remain_amount, dev_status, ipaddr, local_time, create_time from xt_oil_fill
+    </sql>
+
+    <!--如果没有部门不分组查询所有-->
+    <select id="selectXtOilFillListAll" parameterType="com.iiot.business.bo.XtOilFillBoExport"
+            resultMap="OilFillDeptVoResult">
+        SELECT f.`id` AS `id`,f.`dev_code` AS `dev_code`,f.`work_mod` AS `work_mod`,
+        f.`setting_amount` AS `setting_amount`,f.`current_amount` AS `current_amount`,
+        f.`total_amount` AS `total_amount`,f.`tank_capacity` AS `tank_capacity`,
+        f.`remain_amount` AS `rem
+        ain_amount`,f.`dev_status` AS `dev_status`,
+        f.`ipaddr` AS `ipaddr`,f.`local_time` AS `local_time`,f.`create_time` AS `create_time`,
+        f.`real_total_amount` AS `real_total_amount`,d.`province` AS register_address,p.`province` AS position_address  FROM `xt_oil_fill` f
+        LEFT JOIN `xt_device` d ON d.`dev_code` = f.`dev_code`
+        LEFT JOIN  (SELECT xt.`id` AS id,xt.`device_code`AS device_code,xt.`ipaddr` AS ipaddr,xt.`latitude` AS latitude,xt.`longitude` AS longitude,MAX(xt.`gps_time`) AS gps_time,xt.`province` AS province,xt.`city` AS city,xt.`address` AS address,xt.`del_flag` AS del_flag,xt.`create_by` AS create_by,xt.`create_time` AS create_time,xt.`update_by` AS update_by,xt.`update_time` AS  update_time
+        FROM `xt_device_position` AS xt GROUP BY device_code ) p ON f.`dev_code` = p.`device_code`
+        where d.del_flag = '0'
+        <if test="devCode != null  and devCode != ''">and f.dev_code = #{devCode}</if>
+        <if test="workMod != null  and workMod != ''">and f.work_mod = #{workMod}</if>
+        <if test="settingAmount != null ">and f.setting_amount = #{settingAmount}</if>
+        <if test="currentAmount != null ">and f.current_amount = #{currentAmount}</if>
+        <if test="realTotalAmount != null ">and realTotal_amount = #{realTotalAmount}</if>
+        <if test="totalAmount != null ">and f.total_amount = #{totalAmount}</if>
+        <if test="tankCapacity != null ">and f.tank_capacity = #{tankCapacity}</if>
+        <if test="remainAmount != null ">and f.remain_amount = #{remainAmount}</if>
+        <if test="devStatus != null  and devStatus != ''">and f.dev_status = #{devStatus}</if>
+        <if test="ipaddr != null  and ipaddr != ''">and f.ipaddr = #{ipaddr}</if>
+        <if test="localTime != null ">and f.local_time = #{localTime}</if>
+        <if test="startTime !=null and startTime!=''">and f.create_time between #{startTime}</if>
+        <if test="startTime !=null and startTime!='' and endTime !=null and endTime!=''">and #{endTime}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by f.id desc
+    </select>
+
+    <select id="selectXtOilFillList" parameterType="com.iiot.business.bo.XtOilFillBoExport"
+            resultMap="XtOilFillResult">
+        SELECT f.`id` AS id,f.`dev_code` AS dev_code,f.`work_mod` AS work_mod,f.`setting_amount` AS
+        setting_amount,f.`current_amount` AS current_amount,f.`real_total_amount` AS real_total_amount,
+        f.`total_amount` AS total_amount,f.`tank_capacity` AS tank_capacity,f.`remain_amount` AS
+        remain_amount,f.`dev_status` AS dev_status,f.`ipaddr` AS ipaddr,f.`local_time` AS local_time,f.`create_time` AS
+        create_time
+        FROM
+        (SELECT fi.`id` AS id,fi.`dev_code` AS dev_code,fi.`work_mod` AS work_mod,fi.`setting_amount` AS
+        setting_amount,fi.`current_amount` AS current_amount,fi.`real_total_amount` AS
+        real_total_amount,fi.`total_amount` AS total_amount,fi.`tank_capacity` AS tank_capacity,fi.`remain_amount` AS
+        remain_amount,fi.`dev_status` AS dev_status,fi.`ipaddr` AS ipaddr,fi.`local_time` AS
+        local_time,MAX(fi.`create_time`) AS create_time
+        FROM `xt_oil_fill` AS fi GROUP BY `dev_code` ) f
+        LEFT JOIN `xt_device` d ON d.`dev_code` = f.`dev_code`
+        where d.del_flag = '0'
+        <if test="devCode != null  and devCode != ''">and f.dev_code = #{devCode}</if>
+        <if test="workMod != null  and workMod != ''">and f.work_mod = #{workMod}</if>
+        <if test="settingAmount != null ">and f.setting_amount = #{settingAmount}</if>
+        <if test="currentAmount != null ">and f.current_amount = #{currentAmount}</if>
+        <if test="realTotalAmount != null ">and realTotal_amount = #{realTotalAmount}</if>
+        <if test="totalAmount != null ">and f.total_amount = #{totalAmount}</if>
+        <if test="tankCapacity != null ">and f.tank_capacity = #{tankCapacity}</if>
+        <if test="remainAmount != null ">and f.remain_amount = #{remainAmount}</if>
+        <if test="devStatus != null  and devStatus != ''">and f.dev_status = #{devStatus}</if>
+        <if test="ipaddr != null  and ipaddr != ''">and f.ipaddr = #{ipaddr}</if>
+        <if test="localTime != null ">and f.local_time = #{localTime}</if>
+        <if test="startTime !=null and startTime!=''">and f.create_time between #{startTime}</if>
+        <if test="startTime !=null and startTime!='' and endTime !=null and endTime!=''">and #{endTime}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by f.id desc
+    </select>
+
+    <select id="selectXtOilFillById" parameterType="Long" resultMap="XtOilFillResult">
+        <include refid="selectXtOilFillVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertXtOilFill" parameterType="XtOilFill" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_oil_fill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="devCode != null  and devCode != ''">dev_code,</if>
+            <if test="workMod != null  and workMod != ''">work_mod,</if>
+            <if test="settingAmount != null ">setting_amount,</if>
+            <if test="currentAmount != null ">current_amount,</if>
+            <if test="realTotalAmount != null ">real_total_amount,</if>
+            <if test="totalAmount != null ">total_amount,</if>
+            <if test="tankCapacity != null ">tank_capacity,</if>
+            <if test="remainAmount != null ">remain_amount,</if>
+            <if test="devStatus != null  and devStatus != ''">dev_status,</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="localTime != null ">local_time,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="devCode != null  and devCode != ''">#{devCode},</if>
+            <if test="workMod != null  and workMod != ''">#{workMod},</if>
+            <if test="settingAmount != null ">#{settingAmount},</if>
+            <if test="currentAmount != null ">#{currentAmount},</if>
+            <if test="realTotalAmount != null ">#{realTotalAmount},</if>
+            <if test="totalAmount != null ">#{totalAmount},</if>
+            <if test="tankCapacity != null ">#{tankCapacity},</if>
+            <if test="remainAmount != null ">#{remainAmount},</if>
+            <if test="devStatus != null  and devStatus != ''">#{devStatus},</if>
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="localTime != null ">#{localTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtOilFill" parameterType="XtOilFill">
+        update xt_oil_fill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="devCode != null  and devCode != ''">dev_code = #{devCode},</if>
+            <if test="workMod != null  and workMod != ''">work_mod = #{workMod},</if>
+            <if test="settingAmount != null ">setting_amount = #{settingAmount},</if>
+            <if test="currentAmount != null ">current_amount = #{currentAmount},</if>
+            <if test="realTotalAmount != null ">real_total_amount = #{realTotalAmount},</if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="tankCapacity != null ">tank_capacity = #{tankCapacity},</if>
+            <if test="remainAmount != null ">remain_amount = #{remainAmount},</if>
+            <if test="devStatus != null  and devStatus != ''">dev_status = #{devStatus},</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr = #{ipaddr},</if>
+            <if test="localTime != null ">local_time = #{localTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtOilFillById" parameterType="Long">
+        delete from xt_oil_fill where id = #{id}
+    </delete>
+
+    <delete id="deleteXtOilFillByIds" parameterType="String">
+        delete from xt_oil_fill where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectListGroupByDevCode" resultMap="XtOilFillResult">
+        select
+        a.id,
+        a.dev_code,
+        a.work_mod,
+        a.setting_amount,
+        a.current_amount,
+        a.real_total_amount,
+        a.total_amount,
+        a.tank_capacity,
+        a.remain_amount,
+        a.dev_status,
+        a.ipaddr,
+        a.local_time,
+        a.create_time
+        from xt_oil_fill as a,
+        (select dev_code,max(create_time) as max_time from xt_oil_fill group by dev_code) as b
+        <where>
+            <if test="1 == 1">and a.dev_code = b.dev_code</if>
+            <if test="1 == 1">and a.create_time = b.max_time</if>
+            <if test="startTime != null and startTime != ''">and date_format(a.create_time, '%Y-%m-%d %H')
+                <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="overTime != null and overTime != ''">and date_format(a.create_time, '%Y-%m-%d %H') <![CDATA[<=]]>
+                #{overTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectXtOilFillByDevCode" parameterType="String" resultMap="XtOilFillResult">
+        <include refid="selectXtOilFillVo"/>
+        where dev_code = #{devCode}
+        order by create_time desc
+        limit 0,20
+    </select>
+
+
+    <select id="selectXtOilFillByDevCodes" parameterType="XtOilFill" resultMap="XtOilFillResult">
+        SELECT f.`id`,f.`dev_code`,f.`work_mod`,f.`setting_amount`,f.`current_amount`,f.`real_total_amount`,
+        f.`total_amount`,f.`tank_capacity`,f.`remain_amount`,f.`dev_status`,f.`ipaddr`,f.`local_time`,f.`create_time`
+        FROM
+        (SELECT fi.`id` AS id,fi.`dev_code` AS dev_code,fi.`work_mod` AS work_mod,fi.`setting_amount` AS
+        setting_amount,fi.`current_amount` AS current_amount,fi.`real_total_amount` AS
+        real_total_amount,fi.`total_amount` AS total_amount,fi.`tank_capacity` AS tank_capacity,fi.`remain_amount` AS
+        remain_amount,fi.`dev_status` AS dev_status,fi.`ipaddr` AS ipaddr,fi.`local_time` AS
+        local_time,MAX(fi.`create_time`) AS create_time
+        FROM `xt_oil_fill` AS fi GROUP BY `dev_code` ) f
+        LEFT JOIN `xt_device` d ON d.`dev_code` = f.`dev_code`
+        where d.del_flag = '0' and d.dept_id IN (
+        SELECT dept_id FROM `sys_dept`
+        WHERE dept_id = #{deptId}
+        UNION ALL
+        SELECT d.dept_id FROM `sys_dept` d
+        WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        <if test="startTime !=null and startTime!=''">and f.create_time between #{startTime}</if>
+        <if test="startTime !=null and startTime!='' and endTime !=null and endTime!=''">and #{endTime}</if>
+    </select>
+
+    <!--如果有部门不分组查询所有-->
+    <select id="selectXtOilFillByDevCodesAll" parameterType="XtOilFill" resultMap="OilFillDeptVoResult">
+        SELECT f.`id` AS `id`,f.`dev_code` AS `dev_code`,f.`work_mod` AS `work_mod`,
+        f.`setting_amount` AS `setting_amount`,f.`current_amount` AS `current_amount`,
+        f.`total_amount` AS `total_amount`,f.`tank_capacity` AS `tank_capacity`,
+        f.`remain_amount` AS `remain_amount`,f.`dev_status` AS `dev_status`,
+        f.`ipaddr` AS `ipaddr`,f.`local_time` AS `local_time`,f.`create_time` AS `create_time`,
+        f.`real_total_amount` AS `real_total_amount`,d.`province` AS registerAddress,p.`province` AS positionAddress,
+        d.`province` AS register_address,p.`province` AS position_address  FROM `xt_oil_fill` f
+        LEFT JOIN `xt_device` d ON d.`dev_code` = f.`dev_code`
+        LEFT JOIN  (SELECT xt.`id` AS id,xt.`device_code`AS device_code,xt.`ipaddr` AS ipaddr,xt.`latitude` AS latitude,xt.`longitude` AS longitude,MAX(xt.`gps_time`) AS gps_time,xt.`province` AS province,xt.`city` AS city,xt.`address` AS address,xt.`del_flag` AS del_flag,xt.`create_by` AS create_by,xt.`create_time` AS create_time,xt.`update_by` AS update_by,xt.`update_time` AS  update_time
+        FROM `xt_device_position` AS xt GROUP BY device_code ) p ON f.`dev_code` = p.`device_code`
+        where d.del_flag = '0' and d.dept_id IN (
+        SELECT dept_id FROM `sys_dept`
+        WHERE dept_id = #{deptId}
+        UNION ALL
+        SELECT d.dept_id FROM `sys_dept` d
+        WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        <if test="devCode != null  and devCode != ''">and f.dev_code = #{devCode}</if>
+        <if test="startTime !=null and startTime!=''">and f.create_time between #{startTime}</if>
+        <if test="startTime !=null and startTime!='' and endTime !=null and endTime!=''">and #{endTime}</if>
+    </select>
+
+    <select id="selectFillDataByTimeAndArea" resultType="Double">
+        select sum(real_total_amount) from (
+        select dev_code, max(real_total_amount) as real_total_amount
+        from xt_oil_fill
+        where dev_code in
+        (select device_code
+        from xt_device_position
+        where
+        <if test='area == "south" '>
+            province in ("广东省", "广西壮族自治区", "海南省", "香港特别行政区", "澳门特别行政区")
+        </if>
+        <if test='area == "east" '>
+            province in ("上海市", "江苏省", "浙江省", "安徽省", "安徽省", "江西省", "山东省", "山东省")
+        </if>
+        <if test='area == "north" '>
+            province in ("北京市", "天津市", "河北省", "山西省", "内蒙古自治区")
+        </if>
+        <if test='area == "southwest" '>
+            province in ("重庆市", "四川省", "贵州省", "云南省", "西藏自治区")
+        </if>
+        <if test='area == "northwest" '>
+            province in ("陕西省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区")
+        </if>
+        GROUP BY device_code)
+
+        <if test='timeType == "day" '>
+            and date(local_time) = date(now())
+        </if>
+        <if test='timeType == "month" '>
+            and MONTH(local_time) = MONTH(CURDATE()) AND YEAR(local_time) = YEAR(CURDATE())
+        </if>
+        <if test='timeType == "year" '>
+            and YEAR(local_time) = YEAR(CURDATE())
+        </if>
+        GROUP BY dev_code
+        ) as a;
+    </select>
+
+    <select id="selectFillDataByArea" resultType="Double">
+        select sum(real_total_amount) from (
+        select dev_code, max(real_total_amount) as real_total_amount
+        from xt_oil_fill
+        where dev_code in
+        (
+        select device_code
+        from xt_device_position
+        where
+        <if test='area == "south" '>
+            province in ("广东省", "广西壮族自治区", "海南省", "香港特别行政区", "澳门特别行政区")
+        </if>
+        <if test='area == "east" '>
+            province in ("上海市", "江苏省", "浙江省", "安徽省", "安徽省", "江西省", "山东省", "山东省")
+        </if>
+        <if test='area == "north" '>
+            province in ("北京市", "天津市", "河北省", "山西省", "内蒙古自治区")
+        </if>
+        <if test='area == "southwest" '>
+            province in ("重庆市", "四川省", "贵州省", "云南省", "西藏自治区")
+        </if>
+        <if test='area == "northwest" '>
+            province in ("陕西省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区")
+        </if>
+        GROUP BY device_code
+        )
+        GROUP BY dev_code
+        ) as a;
+    </select>
+
+    <select id="fillDataByOilName" resultType="java.util.HashMap">
+        select oil_name, sum(real_total_amount) from
+        (
+        select oil_name, dev_code, max(real_total_amount) as real_total_amount
+        from xt_oil_fill f LEFT JOIN xt_oil_drum d ON f.dev_code = d.bind_dev_code
+
+        where f.dev_code in
+        (
+        select device_code
+        from xt_device_position
+        where
+        <if test='area == "south" '>
+            province in ("广东省", "广西壮族自治区", "海南省", "香港特别行政区", "澳门特别行政区")
+        </if>
+        <if test='area == "east" '>
+            province in ("上海市", "江苏省", "浙江省", "安徽省", "安徽省", "江西省", "山东省", "山东省")
+        </if>
+        <if test='area == "north" '>
+            province in ("北京市", "天津市", "河北省", "山西省", "内蒙古自治区")
+        </if>
+        <if test='area == "southwest" '>
+            province in ("重庆市", "四川省", "贵州省", "云南省", "西藏自治区")
+        </if>
+
+        <if test='area == "northwest" '>
+            province in ("陕西省", "甘肃省", "青海省", "宁夏回族自治区", "新疆维吾尔自治区")
+        </if>
+        GROUP BY device_code
+        )
+        <if test='timeType == "day" '>
+            and date(local_time) = date(now())
+        </if>
+        <if test='timeType == "month" '>
+            and MONTH(local_time) = MONTH(CURDATE()) AND YEAR(local_time) = YEAR(CURDATE())
+        </if>
+        <if test='timeType == "year" '>
+            and YEAR(local_time) = YEAR(CURDATE())
+        </if>
+        GROUP BY dev_code
+        ) as a
+        GROUP BY oil_name;
+    </select>
+
+
+</mapper>

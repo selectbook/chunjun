@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改类型')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-type-edit" th:object="${xtDevType}">
+            <input name="devTypeId" th:field="*{devTypeId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">类型名称：</label>
+                <div class="col-sm-8">
+                    <select name="devType" class="form-control m-b" required>
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "business/type";
+        $("#form-type-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-type-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

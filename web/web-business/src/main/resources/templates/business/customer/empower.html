@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('授权列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
+    <style>
+        .list {
+            margin: 10px;
+        }
+
+        .list_ul {
+            list-style-type: none;
+            background-color: #e4ebfa;
+            padding: 6px 0;
+        }
+
+        .list_ul li {
+            padding: 0px 10px;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .list_ul li .gj {
+            position: absolute;
+            right: 10px;
+        }
+
+        .list_ul li img {
+            margin: 10px 0;
+            margin-left: 27%;
+        }
+
+        /*ul {*/
+        /*    padding: 0;*/
+        /*}*/
+
+        .setbgb {
+            width: 50%;
+            background-color: #000000;
+            display: inline-block;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .setwclolor {
+            color: white;
+        }
+
+        .setgclolor {
+            color: green;
+        }
+
+        .setbgblue {
+            width: 50%;
+            background-color: #4aaff8;
+            display: inline-block;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .setbgblue1 {
+            width: 36%;
+            background-color: #4aaff8;
+            display: inline-block;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .setbtnwh {
+            width: 40px;
+            height: 25px;
+            font-size: 10px;
+            margin-right: 10px;
+        }
+
+        .setbtnwh1 {
+            width: 70px;
+            height: 25px;
+            font-size: 10px;
+            position: absolute;
+            right: 10px;
+        }
+
+        /*.btn {*/
+        /*    padding: 0;*/
+        /*}*/
+    </style>
+</head>
+<body class="gray-bg">
+
+<div class="ui-layout-west">
+    <div class="box box-main">
+        <div class="box-header pre-scrollable">
+            <div class="box-title">
+                <i class="fa icon-grid"></i> 组织机构
+            </div>
+            <div class="box-tools pull-right">
+                <a type="button" class="btn btn-box-tool" href="#" onclick="dept()" title="管理部门"><i
+                        class="fa fa-edit"></i></a>
+                <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;"><i
+                        class="fa fa-chevron-up"></i></button>
+                <button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠"><i
+                        class="fa fa-chevron-down"></i></button>
+                <button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新部门"><i
+                        class="fa fa-refresh"></i></button>
+            </div>
+
+            <div class="ui-layout-content">
+                <div id="tree" class="ztree"></div>
+            </div>
+            <div class="box-header" th:style="'margin-top:'+${'21px'}">
+                <div class="box-title">
+                    <i class="fa icon-grid"></i> 分组列表
+                </div>
+                <div class="box-tools pull-right">
+                    <a type="button" class="btn btn-box-tool" href="#"
+                       onclick="$.modal.open('添加设备','group/add','150px','150px')" title="分组列表"><i
+                            class="fa fa-edit"></i></a>
+                </div>
+            </div>
+            <div class="tabbable">
+                <ul id="group" class="nav nav-tabs">
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="ui-layout-center">
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <input type="hidden" id="deptId" name="deptId">
+                    <input type="hidden" id="parentId" name="parentId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <!--<label>部门id:startTime   endTime</label>-->
+                                <input type="text" placeholder="请输入搜索内容" name="devName"/>
+                            </li>
+                            <li class="select-time">
+                                <label>添加时间：</label>
+                                <input type="text" class="time-input" name="startTime" id="startTime" placeholder="开始时间"
+                                />
+                                <span>-</span>
+                                <input type="text" class="time-input" name="endTime" id="endTime" placeholder="结束时间"
+                                />
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                        class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                        class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table">
+                    <div class="btn-group-sm" id="toolbar" role="group">
+                        <a class="btn btn-success" onclick="$.operate.add()">
+                            <i class="fa fa-plus"></i> 新增授权
+                        </a>
+                        <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+                        >
+                            <i class="fa fa-edit"></i> 参数设置
+                        </a>
+                        <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+                        >
+                            <i class="fa fa-reorder"></i> 发油记录
+                        </a>
+                    </div>
+                    <div class="list">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--3-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--4-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!--1-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--2-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--3-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img src="img/jzimg1.png" th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--4-->
+                                <div class="col-md-3 col-sm-3 col-xs-3 col-lg-3">
+                                    <ul class="list_ul">
+                                        <li>
+                                            1#润滑油<span class="gj">关机</span>
+                                        </li>
+                                        <li>
+                                            设备编号：<span>XT365-000170</span>
+                                        </li>
+                                        <li>
+                                            设定量：
+                                            <div class="setbgb setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            实发量：
+                                            <div class="setbgb setgclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            车牌号：
+                                            <div class="setbgblue setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            行驶公里数：
+                                            <div class="setbgblue1 setwclolor">0.00</div>
+                                        </li>
+                                        <li>
+                                            <img th:src="@{/images/jzimg1.png}"/>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-default setbtnwh">运行</button>
+                                            <button class="btn btn-default setbtnwh">停止</button>
+                                            <button class="btn btn-default setbtnwh1">发油记录</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: layout-latest-js"/>
+<th:block th:include="include :: ztree-js"/>
+<script th:inline="javascript">
+    $(function () {
+        var panehHidden = false;
+        if ($(this).width() < 769) {
+            panehHidden = true;
+        }
+        $('body').layout({initClosed: panehHidden, west__size: 185});
+        queryDeptTree();
+        queryDeptGroup();
+    });
+
+
+    function queryDeptTree() {
+        var url = ctx + "system/dept/treeData";
+        var options = {
+            url: url,
+            expandLevel: 2,
+            onClick: zOnClick
+        };
+
+        $.tree.init(options);
+
+        function zOnClick(event, treeId, treeNode) {
+            $("#deptId").val(treeNode.id);
+            $("#parentId").val(treeNode.pId);
+            $.table.search();
+        }
+    }
+
+    function queryDeptGroup() {
+        var json = null;
+        var url = "/business/group/list";
+        $.ajax({
+            type: 'get',
+            url: url,
+            dataType: 'json',
+            success: function (data) {
+                json = data;
+                for (i = 0; i < json.rows.length; i++) {
+                    var countGroupResult = countGroup(json.rows[i].id);
+                    // console.log(countGroup("countGroupResult:" + countGroupResult);
+                    $("#group").append("<li style='width:100%;color: black' class='list-group-item active'>" + json.rows[i].devGroup + "(" + countGroupResult + "台)" + "</li>");
+                }
+            }, error: function (data) {
+                console.log("error:" + data)
+            }
+        })
+
+    }
+
+    $('#btnRefresh').click(function () {
+        queryDeptTree();
+    });
+
+
+</script>
+</body>
+</html>

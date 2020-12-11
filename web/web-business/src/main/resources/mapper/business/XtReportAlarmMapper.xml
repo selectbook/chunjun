@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtReportAlarmMapper">
+
+    <resultMap type="XtReportAlarm" id="XtReportAlarmResult">
+        <result property="id" column="id"/>
+        <result property="devCode" column="dev_code"/>
+        <result property="type" column="type"/>
+        <result property="timeBegin" column="time_begin"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remainAmount" column="remain_amount"/>
+    </resultMap>
+
+    <sql id="selectXtReportAlarmVo">
+        select id, dev_code, type, time_begin, create_time, update_time, remain_amount from xt_report_alarm
+    </sql>
+
+    <select id="selectXtReportAlarmList" parameterType="XtReportAlarm" resultMap="XtReportAlarmResult">
+        <include refid="selectXtReportAlarmVo"/>
+        <where>
+            <if test="devCode != null  and devCode != ''">and dev_code = #{devCode}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="timeBegin != null ">and time_begin = #{timeBegin}</if>
+            <if test="remainAmount != null ">and remain_amount = #{remainAmount}</if>
+        </where>
+    </select>
+
+    <select id="selectXtReportAlarmById" parameterType="Long" resultMap="XtReportAlarmResult">
+        <include refid="selectXtReportAlarmVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertXtReportAlarm" parameterType="XtReportAlarm">
+        insert into xt_report_alarm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="devCode != null  and devCode != ''">dev_code,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="timeBegin != null ">time_begin,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remainAmount != null ">remain_amount,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="devCode != null  and devCode != ''">#{devCode},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="timeBegin != null ">#{timeBegin},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remainAmount != null ">#{remainAmount},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtReportAlarm" parameterType="XtReportAlarm">
+        update xt_report_alarm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="devCode != null  and devCode != ''">dev_code = #{devCode},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="timeBegin != null ">time_begin = #{timeBegin},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remainAmount != null ">remain_amount = #{remainAmount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtReportAlarmById" parameterType="Long">
+        delete from xt_report_alarm where id = #{id}
+    </delete>
+
+    <delete id="deleteXtReportAlarmByIds" parameterType="String">
+        delete from xt_report_alarm where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAlarmDrum" resultMap="XtReportAlarmResult" parameterType="XtReportAlarm">
+     SELECT r.`id` AS id,r.`dev_code` AS `dev_code`,r.`type` AS `type`,r.`time_begin` AS `time_begin`,
+     r.`create_time` AS `create_time`,r.`update_time` AS `update_time`,r.`remain_amount` AS `remain_amount`
+     FROM  `xt_report_alarm` r
+     LEFT JOIN `xt_oil_drum` d ON d.`bind_dev_code` = r.`dev_code`
+     WHERE r.`type` = 'insufficientOilAlarm' AND r.dev_code = #{devCode}
+    </select>
+
+</mapper>

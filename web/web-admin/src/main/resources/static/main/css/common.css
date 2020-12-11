@@ -1,0 +1,54 @@
+.color-primary {
+    color: #409EFF;
+}
+.bg-color-primary {
+    background-color: #409EFF;
+}
+
+.color-success {
+    color: #67C23A;
+}
+.bg-color-success {
+    background-color: #67C23A;
+}
+
+.color-warning {
+    color: #E6A23C;
+}
+.bg-color-warning {
+    background-color: #E6A23C;
+}
+
+.color-danger {
+    color: #F56C6C;
+}
+.bg-color-danger {
+    background-color: #F56C6C;
+}
+
+.color-info {
+    color: #909399;
+}
+.bg-color-info {
+    background-color: #909399;
+}
+
+html,body {
+    width: 100%;
+    padding: 0;
+}
+html,body,h3,p,ul,li {
+    margin: 0;
+    padding: 0;
+}
+h3 {
+    color: #333;
+}
+ul,li {
+    list-style: none;
+}
+body {
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: #f9f9f9;
+}

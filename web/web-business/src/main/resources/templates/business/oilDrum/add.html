@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增油桶字段')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <style>
+        #parentId {
+            width: 130px;
+            margin-left: 14px;
+        }
+
+        #deptId {
+            margin-left: 10px;
+            width: 130px;
+        }
+
+        #parentId2 {
+            margin-left: 10px;
+            width: 130px;
+        }
+
+        #deptAll {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-oilDrum-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">部门：*</label>
+            <div id="deptAll">
+                <select name="deptId" id="parentId" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${sysDepts}" th:text="${dict.deptName}" th:value="${dict.deptId}">
+                    </option>
+                </select>
+                <select name="deptId" id="parentId2" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                </select>
+                <select name="deptId" id="deptId" class="form-control col-sm-4">
+                    <option value="">所有</option>
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">油桶编号：*</label>
+            <div class="col-sm-8">
+                <input name="oilCode" id="oilCode" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">油品名称：*</label>
+            <div class="col-sm-8">
+                <input name="oilName" id="oilName" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">品牌厂商：*</label>
+            <div class="col-sm-8">
+                <!--                <input name="vendor" class="form-control" type="text">-->
+                <select class="form-control" name="vendor" id="vendor" th:with="type=${@dict.getType('drum_vendor')}">
+                    <option value="">所有</option>
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">油桶容量(l)：*</label>
+            <div class="col-sm-8">
+                <input name="tankCapacity" id="tankCapacity" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">油桶余量(l)：*</label>
+            <div class="col-sm-8">
+                <input name="remainAmount" id="remainAmount" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "business/oilDrum"
+    var checkOilCode = true;    //判断油桶是否重复
+    $("#form-oilDrum-add").validate({
+        focusCleanup: true
+    });
+
+    //当下拉框的属性发生变化
+    $("#parentId").on("change", function () {
+        var url = prefix + "/selectDeptDrop?parentId=" + $(this).val();
+        $.ajax({
+            type: 'post',
+            url: url,
+            dataType: 'json',
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#parentId2").find("option[value!='']").remove();
+                $("#deptId").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#parentId2").append("<option value=" + result[i].deptId + ">" + result[i].deptName + "</option>");
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+
+    //当下拉框的属性发生变化
+    $("#parentId2").on("change", function () {
+        var url = prefix + "/selectDeptDrop?parentId=" + $(this).val();
+        $.ajax({
+            type: 'post',
+            url: url,
+            dataType: 'json',
+            contentType: "application/json",
+            success: function (data) {
+                var result = data.data;
+                $("#deptId").find("option[value!='']").remove();
+                for (i = 0; i < result.length; i++) {
+                    $("#deptId").append("<option value=" + result[i].deptId + ">" + result[i].deptName + "</option>");
+                }
+            }, error: function (data) {
+                console.log(data);
+            }
+        })
+    });
+
+
+    function checkByOilCode(oilCode) {
+        var url = prefix + "/selectOilDrumByOilCode/" + oilCode;
+        $.ajax({
+            type: 'get',
+            url: url,
+            dataType: 'json',
+            async: false,
+            contentType: "application/json",
+            success: function (data) {
+                checkOilCode = data.data;
+            }, error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function submitHandler() {
+        var serializer = "";
+        var deptId = 0;
+        //3个下拉框
+        var parentId1 = $("#parentId").find("option:selected").val();
+        var parentId2 = $("#parentId2").find("option:selected").val();
+        var parentId3 = $("#deptId").find("option:selected").val();
+        //油桶编号
+        var oilCode = $("#oilCode").val();
+        //油桶名称
+        var oilName = $("#oilName").val();
+        //油桶厂商
+        var vendor = $("#vendor").find("option:selected");
+        //油桶容量
+        var tankCapacity = $("#tankCapacity").val();
+        //油桶余量
+        var remainAmount = $("#remainAmount").val();
+        //如果下拉框为空
+        if (parentId1 == null || parentId1 == '') {
+            $.modal.msgError("请选择部门");
+            return;
+        }
+        //如果油桶编号为空
+        if (oilCode == null || oilCode == '') {
+            $.modal.msgError("请输入油桶编号");
+            return;
+        }
+        //如果油桶名称为空
+        if (oilName == null || oilName == '') {
+            $.modal.msgError("请输入油桶名称");
+            return;
+        }
+
+        //如果油桶厂商为空
+        if (vendor.val() == null || vendor.val() == '') {
+            $.modal.msgError("请选择油桶厂商");
+            return;
+        }
+
+        //如果油桶容量为空
+        if (tankCapacity == null || tankCapacity == '') {
+            $.modal.msgError("请输入油桶容量");
+            return;
+        }
+        //如果油桶余量为空
+        if (remainAmount == null || remainAmount == '') {
+            $.modal.msgError("请输入油桶余量");
+            return;
+        }
+
+        //如果于俩大雨容量
+        if (tankCapacity > remainAmount) {
+            $.modal.msgError("油桶于量不能大于油桶容量");
+            return;
+        }
+
+        //判断是否存在
+        this.checkByOilCode(oilCode);
+        if (checkOilCode == false) {
+            $.modal.msgError("油桶编号,已存在,请换一个");
+            return;
+        }
+
+        if (parentId1 != null && parentId1 != '') {
+            deptId = parentId1;
+        }
+
+        if (parentId2 != null && parentId2 != '') {
+            deptId = parentId2;
+        }
+
+        if (parentId3 != null && parentId3 != '') {
+            deptId = parentId3;
+        }
+
+        serializer = "deptId=" + deptId + "&oilCode=" + oilCode + "&oilName=" + oilName +
+            "&vendor=" + vendor.text() + "&tankCapacity=" + tankCapacity + "&remainAmount=" + remainAmount;
+        console.log($('#form-oilDrum-add').serialize());
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", serializer);
+        }
+    }
+
+    $("input[name='bindTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtDevTypeMapper">
+    
+    <resultMap type="XtDevType" id="XtDevTypeResult">
+        <result property="devTypeId"    column="dev_type_id"    />
+        <result property="devType"    column="dev_type"    />
+    </resultMap>
+
+    <sql id="selectXtDevTypeVo">
+        select dev_type_id, dev_type from xt_dev_type
+    </sql>
+
+    <select id="selectXtDevTypeList" parameterType="XtDevType" resultMap="XtDevTypeResult">
+        <include refid="selectXtDevTypeVo"/>
+        <where>  
+            <if test="devType != null  and devType != ''"> and dev_type = #{devType}</if>
+        </where>
+    </select>
+    
+    <select id="selectXtDevTypeById" parameterType="Integer" resultMap="XtDevTypeResult">
+        <include refid="selectXtDevTypeVo"/>
+        where dev_type_id = #{devTypeId}
+    </select>
+        
+    <insert id="insertXtDevType" parameterType="XtDevType" useGeneratedKeys="true" keyProperty="devTypeId">
+        insert into xt_dev_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="devType != null  and devType != ''">dev_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="devType != null  and devType != ''">#{devType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXtDevType" parameterType="XtDevType">
+        update xt_dev_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="devType != null  and devType != ''">dev_type = #{devType},</if>
+        </trim>
+        where dev_type_id = #{devTypeId}
+    </update>
+
+    <delete id="deleteXtDevTypeById" parameterType="Integer">
+        delete from xt_dev_type where dev_type_id = #{devTypeId}
+    </delete>
+
+    <delete id="deleteXtDevTypeByIds" parameterType="String">
+        delete from xt_dev_type where dev_type_id in 
+        <foreach item="devTypeId" collection="array" open="(" separator="," close=")">
+            #{devTypeId}
+        </foreach>
+    </delete>
+    
+</mapper>

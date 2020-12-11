@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.8.0/dist/echarts.min.js"></script>
+    <script type="text/javascript"
+            src="https://webapi.amap.com/maps?v=1.4.15&key=bSpkpx7wFG9jd4GgTuHB4HzNdAGGjgoF"></script>
+    <th:block th:include="include :: header('数据面板')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body>
+<div class="top-box">
+    <div class="box-content">
+        <div class="card blue">
+            <div class="card-top">
+                <div class="card-area">区域：华北</div>
+                <div class="card-date">
+                    <span class="active">天</span>
+                    <span>月</span>
+                    <span>年</span>
+                </div>
+            </div>
+            <div class="card-bottom">加油总量: 0L</div>
+        </div>
+        <div class="card green">
+            <div class="card-top">
+                <div class="card-area">区域：华东</div>
+                <div class="card-date">
+                    <span class="active">天</span>
+                    <span>月</span>
+                    <span>年</span>
+                </div>
+            </div>
+            <div class="card-bottom">加油总量: 0L</div>
+        </div>
+        <div class="card yellow">
+            <div class="card-top">
+                <div class="card-area">区域：华南</div>
+                <div class="card-date">
+                    <span class="active">天</span>
+                    <span>月</span>
+                    <span>年</span>
+                </div>
+            </div>
+            <div class="card-bottom">加油总量: 175288L</div>
+        </div>
+        <div class="card red">
+            <div class="card-top">
+                <div class="card-area">区域：西南</div>
+                <div class="card-date">
+                    <span class="active">天</span>
+                    <span>月</span>
+                    <span>年</span>
+                </div>
+            </div>
+            <div class="card-bottom">加油总量: 0L</div>
+        </div>
+        <div class="card gray">
+            <div class="card-top">
+                <div class="card-area">区域：西北</div>
+                <div class="card-date">
+                    <span class="active">天</span>
+                    <span>月</span>
+                    <span>年</span>
+                </div>
+            </div>
+            <div class="card-bottom">加油总量: 0L</div>
+        </div>
+    </div>
+</div>
+<div class="mid-box">
+    <div class="mid-box-one">
+        <div class="table-title">
+            <p>单位:升</p>
+            <h3>油品用量</h3>
+            <div class="card-date">
+                <span class="active">天</span>
+                <span>月</span>
+                <span>年</span>
+            </div>
+        </div>
+        <table>
+            <tr>
+                <th>品牌</th>
+                <th>华北</th>
+                <th>华东</th>
+                <th>华南</th>
+                <th>西南</th>
+                <th>西北</th>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/kepai.jpg}" alt="">
+                    <span>壳牌</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/changcheng.png}" alt="">
+                    <span>长城</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/tongyi.png}" alt="">
+                    <span>统一</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/kunlun.png}" alt="">
+                    <span>昆仑</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/meifu.jpg}" alt="">
+                    <span>美孚</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/jiasiduo.png}" alt="">
+                    <span>嘉实多</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/daodaer.png}" alt="">
+                    <span>道达尔</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/fusi.png}" alt="">
+                    <span>福斯</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+            <tr>
+                <td class="brand">
+                    <img th:src="@{/main/bp.jpg}" alt="">
+                    <span>BP</span>
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="mid-box-two">
+        <div id="pip-box" style="width: 100%;height:400px;"></div>
+    </div>
+</div>
+
+<div class="mid-box">
+    <div class="mid-box-one">
+        <div class="table-title">
+            <h4>消息通知</h4>
+        </div>
+        <ul class="msg-list">
+            <li class="msg-item">
+                <div class="msg-left">
+                    <img th:src="@{/main/warn.png}" alt="">
+<!--                    <p class="msg-txt">您有0台加注机发生故障，请检查维修</p>-->
+                </div>
+                <p class="msg-statu">New</p>
+            </li>
+            <li class="msg-item">
+                <div class="msg-left">
+                    <img th:src="@{/main/xinxi.png}" alt="">
+                    <p class="msg-txt"></p>
+<!--                    <p class="msg-txt">您有0条重要的系统通知</p>-->
+                </div>
+                <p class="msg-statu">New</p>
+            </li>
+            <li class="msg-item">
+                <div class="msg-left">
+                    <img th:src="@{/main/warn.png}" alt="">
+                    <p class="msg-txt"></p>
+<!--                    <p class="msg-txt">您的油库存不足警告</p>-->
+                </div>
+                <!-- <p class="msg-statu">New</p> -->
+            </li>
+            <li class="msg-item">
+                <div class="msg-left">
+                    <img th:src="@{/main/warn.png}" alt="">
+<!--                    <p class="msg-txt">您有0台设备位置异常警告</p>-->
+                    <p class="msg-txt"></p>
+                </div>
+                <!-- <p class="msg-statu">New</p> -->
+            </li>
+            <li class="msg-item">
+                <div class="msg-left">
+                    <img th:src="@{/main/warn.png}" alt="">
+<!--                    <p class="msg-txt">您有0台设备位置异常警告</p>-->
+                    <p class="msg-txt"></p>
+                </div>
+                <!-- <p class="msg-statu">New</p> -->
+            </li>
+        </ul>
+    </div>
+    <div class="mid-box-two mid-box-sm">
+        <div class="mid-box-son">
+            <div class="sm-box-title">润滑油库存（桶）</div>
+            <div class="sm-box-content">
+                <div class="condition-card-one">
+                    <span class="card-name">剩余</span>
+                    <span class="card-value">0</span>
+                </div>
+                <div class="condition-card-one">
+                    <span class="card-name">消耗</span>
+                    <span class="card-value">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="mid-box-son">
+            <div class="sm-box-title">设备状况（台）</div>
+            <div class="sm-box-content">
+                <div class="condition-card-two online">
+                    <p class="card-num">0</p>
+                    <div class="card-statu">
+                        <span class="card-dot"></span>
+                        <span class="card-statu-txt">在线</span>
+                    </div>
+                </div>
+                <div class="condition-card-two offline">
+                    <p class="card-num">0</p>
+                    <div class="card-statu">
+                        <span class="card-dot"></span>
+                        <span class="card-statu-txt">离线</span>
+                    </div>
+                </div>
+                <div class="condition-card-two broken">
+                    <p class="card-num">0</p>
+                    <div class="card-statu">
+                        <span class="card-dot"></span>
+                        <span class="card-statu-txt">异常</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bottom-box">
+    <!--    <div class="sm-box-title">设备分布情况</div>-->
+    <!--    <div id="container"></div>-->
+</div>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        background-color: #ccc;
+    }
+
+    .top-box {
+        width: 100%;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .top-box .box-content {
+        padding: 5px 10px;
+        height: 100%;
+        background-color: #fff;
+        border-radius: 6px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .box-content .card {
+        width: 180px;
+        height: 90px;
+        margin: 0 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #409EFF;
+        border-radius: 4px;
+        padding: 10px 10px;
+        color: #fff;
+    }
+
+    .box-content .card.gray {
+        background-color: #909399;
+    }
+
+    .box-content .card.gray .card-date {
+        color: #909399;
+    }
+
+    .box-content .card.blue {
+        background-color: #409EFF;
+    }
+
+    .box-content .card.blue .card-date {
+        color: #409EFF;
+    }
+
+    .box-content .card.yellow {
+        background-color: #E6A23C;
+    }
+
+    .box-content .card.yellow .card-date {
+        color: #E6A23C;
+    }
+
+    .box-content .card.red {
+        background-color: #F56C6C;
+    }
+
+    .box-content .card.red .card-date {
+        color: #F56C6C;
+    }
+
+    .box-content .card.green {
+        background-color: #67C23A;
+    }
+
+    .box-content .card.green .card-date {
+        color: #67C23A;
+    }
+
+    .box-content .card .card-top {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .box-content .card .card-date {
+        border: 1px solid #fff;
+        padding: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 22px;
+        border-radius: 2px;
+    }
+
+    .card .card-date span {
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        background-color: #fff;
+    }
+
+    .card .card-date span.active {
+        color: #fff;
+        background-color: transparent;
+    }
+
+    .box-content .card .card-bottom {
+        width: 100%;
+        text-align: left;
+    }
+
+    .mid-box {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        margin-top: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .mid-box .mid-box-one {
+        width: 59%;
+        padding: 8px;
+        box-sizing: border-box;
+        background-color: #fff;
+        border-radius: 6px;
+    }
+
+    .mid-box-one .table-title {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 10px 16px;
+    }
+
+    .table-title p,
+    .table-title h3 {
+        padding: 0;
+        margin: 0;
+    }
+
+    .table-title .card-date {
+        background-color: #909399;
+        border: 1px solid #909399;
+        border-radius: 2px;
+    }
+
+    .table-title .card-date span {
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .table-title .card-date span.active {
+        color: #909399;
+        background-color: #fff;
+    }
+
+    .mid-box .mid-box-one table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+        margin-top: 10px;
+        color: #909390;
+    }
+
+    .mid-box .mid-box-one table th {
+        background-color: #F2F6FC;
+        text-align: center;
+        height: 32px;
+    }
+
+    .mid-box .mid-box-one table tr:not(:first-child) {
+        border-bottom: 1px solid #DCDFE6;
+        height: 28px;
+    }
+
+    .mid-box .mid-box-one table td.brand img {
+        width: 16px;
+    }
+
+    .mid-box .mid-box-one table td {
+        word-break: break-all;
+        word-wrap: break-word;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .mid-box .mid-box-two {
+        width: 39%;
+        background-color: #fff;
+        border-radius: 6px;
+    }
+    #pip-box {
+        padding-top: 10px;
+        box-sizing: border-box;
+    }
+    .mid-box-one ul,
+    .mid-box-two li {
+        list-style: none;
+    }
+    .mid-box-one ul li {
+        height: 56px;
+        border-bottom: 1px solid #DCDFE6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+    }
+    .mid-box-one ul li .msg-left {
+        display: flex;
+        align-items: center;
+    }
+    .msg-left img {
+        width: 32px;
+    }
+    .msg-left .msg-txt {
+        margin: 0;
+        padding-left: 16px;
+        font-size: 18px;
+    }
+    .mid-box-one ul li .msg-statu {
+        margin: 0;
+        font-size: 20px;
+        color:#F56C6C;
+    }
+    .mid-box-two.mid-box-sm {
+        background-color: transparent;
+    }
+    .mid-box-two .mid-box-son {
+        width: 100%;
+        height: 195px;
+        background-color: #fff;
+        border-radius: 6px;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    .mid-box-two .mid-box-son:not(:first-child) {
+        margin-top: 10px;
+    }
+    .mid-box-son .sm-box-title {
+        font-size: 18px;
+        height: 65px;
+        padding: 10px 10px 16px;
+        box-sizing: border-box;
+        text-align: center;
+        border-bottom: 1px solid #DCDFE6;
+    }
+    .mid-box-son .sm-box-content {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .sm-box-content .condition-card-one {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+    .sm-box-content .condition-card-one:not(:last-child)::after {
+        content: " ";
+        display: block;
+        width: 1px;
+        height: 80%;
+        background-color: #DCDFE6;
+        position: absolute;
+        right: 0;
+        top: 10%;
+    }
+    .condition-card-one span {
+        display: block;
+        height: 50px;
+        width: 100%;
+        line-height: 50px;
+        font-size: 16px;
+        color: #606266;
+    }
+    .condition-card-one .card-name {
+        padding-left: 60px;
+    }
+
+    .condition-card-one .card-value {
+        padding-left: 80px;
+        font-weight: 500;
+    }
+
+    .sm-box-content .condition-card-two {
+        flex: 1;
+        height: 100%;
+        padding-top: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-sizing: border-box;
+    }
+    .sm-box-content .condition-card-two:not(:last-child)::after {
+        content: " ";
+        display: block;
+        width: 1px;
+        height: 80%;
+        background-color: #DCDFE6;
+        position: absolute;
+        right: 0;
+        top: 10%;
+    }
+    .condition-card-two .card-num {
+        font-size: 16px;
+    }
+    .condition-card-two .card-statu .card-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+    .online .card-dot {
+        background-color: #67C23A;
+    }
+    .online .card-num {
+        color: #67C23A;
+    }
+    .offline .card-dot {
+        background-color: #E6A23C;
+    }
+    .offline .card-num {
+        color: #E6A23C;
+    }
+    .broken .card-dot {
+        background-color: #F56C6C;
+    }
+    .broken .card-num {
+        color: #F56C6C;
+    }
+    .bottom-box {
+        margin: 10px 0 20px;
+        background-color: #fff;
+        padding: 8px;
+        border-radius: 6px;
+    }
+    .bottom-box #container {
+        width: 100%;
+        height: 600px;
+    }
+</style>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+
+    $(function () {
+        // var url = "http://129.204.176.239:8081/business/oilFill/amountByArea";
+        // $.ajax({
+        //     type: "get",
+        //     url: url,
+        //         // dataType : "jsonp",//数据类型为jsonp
+        //     jsonp : "jsonpCallback",//服务端用于接收callback调用的function名的参数
+        //     dataType:"json",
+        //     contentType: "application/json",
+        //     success: function (data) {
+        //         console.log("JSON:" + JSON.stringify(data));
+        //     }
+        // });
+    });
+    window.onload = function () {
+        // 基于准备好的dom，初始化echarts实例
+        console.log(echarts)
+        var myChart = echarts.init(document.getElementById('pip-box'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '润滑油用量',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b} : {c} ({d}%)'
+            },
+            legend: {
+                bottom: 10,
+                left: 'center',
+                data: ['华北', '华南', '华东', '西南', '西北']
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: '65%',
+                    center: ['50%', '50%'],
+                    selectedMode: 'single',
+                    data: [
+                        {value: 0, name: '华北', itemStyle: {color: '#409EFF'}},
+                        {value: 0, name: '华南', itemStyle: {color: '#67C23A'}},
+                        {value: 0, name: '华东', itemStyle: {color: '#E6A23C'}},
+                        {value: 0, name: '西南', itemStyle: {color: '#F56C6C'}},
+                        {value: 0, name: '西北', itemStyle: {color: '#909399'}}
+                    ]
+                }
+            ]
+        }
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        var map = new AMap.Map('container')
+    }
+</script>
+</html>

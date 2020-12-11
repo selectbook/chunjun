@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtCustomerPutFillMapper">
+    
+    <resultMap type="XtCustomerPutFill" id="XtCustomerPutFillResult">
+        <result property="id"    column="id"    />
+        <result property="putDate"    column="put_date"    />
+        <result property="reallizeAmout"    column="reallize_amout"    />
+        <result property="settingAmount"    column="setting_amount"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="currentAmount"    column="current_amount"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectXtCustomerPutFillVo">
+        select id, put_date, reallize_amout, setting_amount, total_amount, current_amount, license_plate, create_by, create_time, update_by, update_time from xt_customer_put_fill
+    </sql>
+
+    <select id="selectXtCustomerPutFillList" parameterType="XtCustomerPutFill" resultMap="XtCustomerPutFillResult">
+        <include refid="selectXtCustomerPutFillVo"/>
+        <where>  
+            <if test="putDate != null "> and put_date = #{putDate}</if>
+            <if test="reallizeAmout != null "> and reallize_amout = #{reallizeAmout}</if>
+            <if test="settingAmount != null "> and setting_amount = #{settingAmount}</if>
+            <if test="totalAmount != null "> and total_amount = #{totalAmount}</if>
+            <if test="currentAmount != null "> and current_amount = #{currentAmount}</if>
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+        </where>
+    </select>
+    
+    <select id="selectXtCustomerPutFillById" parameterType="Long" resultMap="XtCustomerPutFillResult">
+        <include refid="selectXtCustomerPutFillVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertXtCustomerPutFill" parameterType="XtCustomerPutFill">
+        insert into xt_customer_put_fill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="putDate != null ">put_date,</if>
+            <if test="reallizeAmout != null ">reallize_amout,</if>
+            <if test="settingAmount != null ">setting_amount,</if>
+            <if test="totalAmount != null ">total_amount,</if>
+            <if test="currentAmount != null ">current_amount,</if>
+            <if test="licensePlate != null  and licensePlate != ''">license_plate,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="putDate != null ">#{putDate},</if>
+            <if test="reallizeAmout != null ">#{reallizeAmout},</if>
+            <if test="settingAmount != null ">#{settingAmount},</if>
+            <if test="totalAmount != null ">#{totalAmount},</if>
+            <if test="currentAmount != null ">#{currentAmount},</if>
+            <if test="licensePlate != null  and licensePlate != ''">#{licensePlate},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXtCustomerPutFill" parameterType="XtCustomerPutFill">
+        update xt_customer_put_fill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="putDate != null ">put_date = #{putDate},</if>
+            <if test="reallizeAmout != null ">reallize_amout = #{reallizeAmout},</if>
+            <if test="settingAmount != null ">setting_amount = #{settingAmount},</if>
+            <if test="totalAmount != null ">total_amount = #{totalAmount},</if>
+            <if test="currentAmount != null ">current_amount = #{currentAmount},</if>
+            <if test="licensePlate != null  and licensePlate != ''">license_plate = #{licensePlate},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtCustomerPutFillById" parameterType="Long">
+        delete from xt_customer_put_fill where id = #{id}
+    </delete>
+
+    <delete id="deleteXtCustomerPutFillByIds" parameterType="String">
+        delete from xt_customer_put_fill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,267 @@
+/* panel-header */
+.panel-header{
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    height: 120px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 3px;
+}
+.panel-header .header-card {
+    height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    color: #fff;
+    border-radius: 3px;
+}
+.panel-header .header-card:not(:last-child) {
+    margin-right: 20px;
+}
+.header-card .header-card-top {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+    line-height: 24px;
+}
+.header-card-top .card-info-date {
+    display: flex;
+    border: 1px solid #fff;
+    border-radius: 3px;
+}
+.card-info-date .date-btn {
+    width: 22px;
+    text-align: center;
+    background-color: #fff;
+    cursor: pointer;
+}
+.card-info-date .date-btn.active {
+    color: #fff;
+    background-color: transparent;
+}
+.header-card .header-card-bot {
+    width: 100%;
+    text-align: left;
+}
+/* panle-box */
+.panel-box {
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 420px;
+    overflow: hidden;
+}
+.panel-box .box-left {
+    width: calc(66.66% - 10px);
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+.panel-box .box-right {
+    width: 33.33%;
+    padding: 10px;
+    /* background-color: #fff; */
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+.panel-box .box-consumption-chart {
+    background-color: #fff;
+}
+.box-consumption-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    padding-bottom: 10px;
+}
+.box-consumption-header .card-info-date {
+    width: 66px;
+    display: flex;
+    border: 1px solid #909399;
+    border-radius: 2px;
+    box-sizing: border-box;
+    align-self:flex-end;
+}
+.box-consumption-header .card-info-date .date-btn {
+    width: 22px;
+    text-align: center;
+    background-color: #fff;
+    color: #909399;
+    cursor: pointer;
+}
+.box-consumption-header .card-info-date .date-btn.active {
+    color: #fff;
+    background-color: #909399;
+}
+.box-consumption-header h3, 
+.box-consumption-header p {
+    align-self:flex-end;
+}
+.box-consumption-header h3 {
+    font-size: 20px;
+    align-self: center;
+}
+.box-consumption .el-table::before {
+    display: none;
+}
+
+.panel-box .notification-header {
+    font-size: 20px;
+    line-height: 50px;
+    padding-bottom: 10px;
+}
+.panel-box .msg-list {
+    width: 100%;
+    max-height: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.msg-list .msg-item {
+    line-height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color:#606266;
+    cursor: pointer;
+    position: relative;
+}
+.msg-item:not(:last-child)::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background-color: #EBEEF5;
+}
+.msg-item i {
+    font-size: 22px;
+    margin-right: 10px;
+}
+.box-right.other-info-box {
+    padding: 0;
+}
+.other-info-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.other-info-box .device-info-box {
+    width: 100%;
+    height: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 3px;
+}
+.device-info-box:not(:last-child) {
+    height: calc(50% - 10px);
+    margin-bottom:  10px;
+}
+.device-info-box h3 {
+    text-align: center;
+    line-height: 50px;
+    padding-bottom: 10px;
+    position: relative;
+}
+.device-info-box h3::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #EBEEF5;
+}
+.barrel-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.barrel-info .barrel-info-item {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    height: 120px;
+    font-size: 18px;
+}
+.barrel-info-item:not(:last-child)::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background-color: #EBEEF5;
+}
+.barrel-info-item .item-name {
+    line-height: 60px;
+    padding-left: 30px;
+}
+.barrel-info-item .item-value {
+    text-align: center;
+    line-height: 60px;
+    color: #333;
+    font-weight: 500;
+}
+.device-info-box .device-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 130px;
+}
+.device-info .device-info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 33.33%;
+}
+.device-info-item:not(:last-child)::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background-color: #EBEEF5;
+}
+.device-info-item .item-value {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 28px;
+}
+.device-info-item .item-name {
+    font-size: 16px;
+    color: #333;
+    line-height: 28px;
+}
+.device-info-item .item-name span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 10px;
+}

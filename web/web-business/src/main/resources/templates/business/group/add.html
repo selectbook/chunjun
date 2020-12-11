@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增分组')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-group-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">分组名称：</label>
+                <div class="col-sm-8">
+                    <input name="devGroup" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "business/group"
+        $("#form-group-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-group-add').serialize(),function(){
+                    //关闭弹出框刷新父页面
+                    window.parent.location.reload();
+                });
+
+            }
+
+        }
+    </script>
+</body>
+</html>

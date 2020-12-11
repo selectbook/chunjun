@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtOilDrumMapper">
+
+    <resultMap type="XtOilDrum" id="XtOilDrumResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="oilCode" column="oil_code"/>
+        <result property="oilName" column="oil_name"/>
+        <result property="vendor" column="vendor"/>
+        <result property="tankCapacity" column="tank_capacity"/>
+        <result property="remainAmount" column="remain_amount"/>
+        <result property="bindDeptId" column="bind_dept_id"/>
+        <result property="bindTime" column="bind_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="bindStatus" column="bind_status"/>
+        <result property="bindDevCode" column="bind_dev_code"/>
+    </resultMap>
+
+    <sql id="selectXtOilDrumVo">
+        select id, dept_id, oil_code, oil_name, vendor, tank_capacity, remain_amount, bind_dept_id,bind_status,bind_dev_code, bind_time, del_flag, create_by, create_time, update_by, update_time from xt_oil_drum
+    </sql>
+
+
+    <select id="selectXtOilDrumListAll" parameterType="XtOilDrum" resultMap="XtOilDrumResult">
+        SELECT d.`id` AS `id`,d.`dept_id` AS `dept_id`,d.`oil_code` AS `oil_code`,
+        d.`oil_name` AS `oil_name`,d.`vendor` AS `vendor`,d.`tank_capacity` AS `tank_capacity`,
+        d.`remain_amount` AS `remain_amount`,d.`bind_dept_id` AS `bind_dept_id`,d.`bind_time` AS `bind_time`,
+        d.`del_flag` AS `del_flag`,d.`create_by` AS `create_by`,d.`create_time`AS `create_time`,d.`update_by` AS
+        `update_by`,d.bind_status AS bind_status,d.bind_dev_code AS bind_dev_code,
+        d.`update_time` AS `update_time` FROM `xt_oil_drum` d
+        -- LEFT JOIN `sys_user` u ON d.`dept_id` =u.`dept_id`
+        WHERE d.`del_flag` = 0
+        <if test="deptId != null ">
+            and d.dept_id IN (
+            SELECT dept_id FROM `sys_dept`
+            WHERE dept_id = #{deptId}
+            UNION ALL
+            SELECT d.dept_id FROM `sys_dept` d
+            WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        </if>
+        <if test="oilCode != null  and oilCode != ''">and d.oil_code = #{oilCode}</if>
+        <if test="oilName != null  and oilName != ''">and d.oil_name like concat('%', #{oilName}, '%')</if>
+        <if test="vendor != null  and vendor != ''">and d.vendor = #{vendor}</if>
+        <if test="tankCapacity != null ">and d.tank_capacity = #{tankCapacity}</if>
+        <if test="remainAmount != null ">and d.remain_amount = #{remainAmount}</if>
+        <if test="bindDevCode !=null ">and d.bind_dev_code = #{bindDevCode}</if>
+        <if test="bindStatus !=null ">and d.bind_status = #{bindStatus}</if>
+        <if test="bindDeptId != null ">and d.bind_dept_id = #{bindDeptId}</if>
+        <if test="bindTime != null ">and d.bind_time = #{bindTime}</if>
+    </select>
+
+    <select id="selectXtOilDrumList" parameterType="com.iiot.business.bo.XtOilDrumBoExport"
+            resultMap="XtOilDrumResult">
+        SELECT d.`id` AS `id`,d.`dept_id` AS `dept_id`,d.`oil_code` AS `oil_code`,
+        d.`oil_name` AS `oil_name`,d.`vendor` AS `vendor`,d.`tank_capacity` AS `tank_capacity`,
+        d.`remain_amount` AS `remain_amount`,d.`bind_dept_id` AS `bind_dept_id`,d.`bind_time` AS `bind_time`,
+        d.`del_flag` AS `del_flag`,d.`create_by` AS `create_by`,d.`create_time`AS `create_time`,d.`update_by` AS
+        `update_by`,d.bind_status AS bind_status,d.bind_dev_code AS bind_dev_code,
+        d.`update_time` AS `update_time` FROM `xt_oil_drum` d
+        -- LEFT JOIN `sys_user` u ON d.`dept_id` =u.`dept_id`
+        WHERE d.`del_flag` = 0
+        <if test="deptId != null ">
+            and d.dept_id IN (
+            SELECT dept_id FROM `sys_dept`
+            WHERE dept_id = #{deptId}
+            UNION ALL
+            SELECT d.dept_id FROM `sys_dept` d
+            WHERE d.`ancestors` like concat('%',#{deptId},'%'))
+        </if>
+        <if test="oilCode != null  and oilCode != ''">and d.oil_code = #{oilCode}</if>
+        <if test="oilName != null  and oilName != ''">and d.oil_name like concat('%', #{oilName}, '%')</if>
+        <if test="vendor != null  and vendor != ''">and d.vendor = #{vendor}</if>
+        <if test="tankCapacity != null ">and d.tank_capacity = #{tankCapacity}</if>
+        <if test="remainAmount != null ">and d.remain_amount = #{remainAmount}</if>
+        <if test="bindDevCode !=null ">and d.bind_dev_code = #{bindDevCode}</if>
+        <if test="bindStatus !=null ">and d.bind_status = #{bindStatus}</if>
+        <if test="bindDeptId != null ">and d.bind_dept_id = #{bindDeptId}</if>
+        <if test="bindTime != null ">and d.bind_time = #{bindTime}</if>
+        <if test="startTime !=null and startTime!=''">and d.create_time between #{startTime}</if>
+        <if test="endTime !=null and endTime!=''">and #{endTime}</if>
+        ${params.dataScope}
+    </select>
+
+    <select id="selectXtOilDrumById" parameterType="Long" resultMap="XtOilDrumResult">
+        <include refid="selectXtOilDrumVo"/>
+        where id = #{id} and `del_flag` = 0
+    </select>
+
+    <insert id="insertXtOilDrum" parameterType="XtOilDrum" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_oil_drum
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">dept_id,</if>
+            <if test="oilCode != null  and oilCode != ''">oil_code,</if>
+            <if test="oilName != null  and oilName != ''">oil_name,</if>
+            <if test="vendor != null  and vendor != ''">vendor,</if>
+            <if test="tankCapacity != null ">tank_capacity,</if>
+            <if test="remainAmount != null ">remain_amount,</if>
+            <if test="bindDeptId != null ">bind_dept_id,</if>
+            <if test="bindTime != null ">bind_time,</if>
+            <if test="bindDevCode !=null ">bind_dev_code,</if>
+            <if test="bindStatus !=null ">bind_status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="oilCode != null  and oilCode != ''">#{oilCode},</if>
+            <if test="oilName != null  and oilName != ''">#{oilName},</if>
+            <if test="vendor != null  and vendor != ''">#{vendor},</if>
+            <if test="tankCapacity != null ">#{tankCapacity},</if>
+            <if test="remainAmount != null ">#{remainAmount},</if>
+            <if test="bindDeptId != null ">#{bindDeptId},</if>
+            <if test="bindTime != null ">#{bindTime},</if>
+            <if test="bindDevCode !=null ">#{bindDevCode},</if>
+            <if test="bindStatus !=null ">#{bindStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtOilDrum" parameterType="XtOilDrum">
+        update xt_oil_drum
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="oilCode != null  and oilCode != ''">oil_code = #{oilCode},</if>
+            <if test="oilName != null  and oilName != ''">oil_name = #{oilName},</if>
+            <if test="vendor != null  and vendor != ''">vendor = #{vendor},</if>
+            <if test="tankCapacity != null ">tank_capacity = #{tankCapacity},</if>
+            <if test="remainAmount != null ">remain_amount = #{remainAmount},</if>
+            <if test="bindDeptId != null ">bind_dept_id = #{bindDeptId},</if>
+            <if test="bindTime != null ">bind_time = #{bindTime},</if>
+            <if test="bindDevCode !=null ">bind_dev_code = #{bindDevCode},</if>
+            <if test="bindStatus !=null ">bind_status = #{bindStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateXtOilDrumByOilCode" parameterType="XtOilDrum">
+        update xt_oil_drum
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="oilName != null  and oilName != ''">oil_name = #{oilName},</if>
+            <if test="vendor != null  and vendor != ''">vendor = #{vendor},</if>
+            <if test="tankCapacity != null ">tank_capacity = #{tankCapacity},</if>
+            <if test="remainAmount != null ">remain_amount = #{remainAmount},</if>
+            <if test="bindDeptId != null ">bind_dept_id = #{bindDeptId},</if>
+            <if test="bindTime != null ">bind_time = #{bindTime},</if>
+            <if test="bindDevCode !=null ">bind_dev_code = #{bindDevCode},</if>
+            <if test="bindStatus !=null ">bind_status = #{bindStatus},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where oil_code = #{oilCode}
+    </update>
+
+
+    <delete id="deleteXtOilDrumById" parameterType="Long">
+        delete from xt_oil_drum where id = #{id}
+    </delete>
+
+    <delete id="deleteXtOilDrumByIds" parameterType="String">
+        delete from xt_oil_drum where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectXtOilDrumByOilCode" parameterType="String" resultMap="XtOilDrumResult">
+        <include refid="selectXtOilDrumVo"/>
+        where oil_code = #{oilCode} and `del_flag` = 0
+    </select>
+
+    <select id="selectDrumStock" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from xt_oil_drum
+        where
+        <if test='type = "rest"'>
+            remain_amount != 0
+        </if>
+        <if test='type == "used"'>
+            remain_amount = 0
+        </if>
+    </select>
+
+    <select id="selectXtOilDrumByDeptId" parameterType="Long" resultMap="XtOilDrumResult">
+        <include refid="selectXtOilDrumVo"/>
+        where dept_id = #{dept_id} and `del_flag` = 0
+    </select>
+
+    <select id="selectXtDrumVendorByDeptId" parameterType="Long" resultType="String">
+        select vendor from xt_oil_drum
+        where dept_id = #{deptId} and `del_flag` = 0
+    </select>
+
+    <select id="selectXtDrumVendors" resultType="String">
+        select vendor from xt_oil_drum
+        where `del_flag` = 0
+        group by vendor
+    </select>
+
+
+    <select id="selectCountDrumByVendor" resultType="Integer" parameterType="String">
+        select count(*) from xt_oil_drum where vendor = #{vendor} and `del_flag` = 0
+    </select>
+
+    <select id="selectAlarmDrum" resultMap="XtOilDrumResult" parameterType="XtOilDrum">
+    SELECT d.`id` AS id,d.`dept_id` AS `dept_id`,d.`bind_dev_code` AS `bind_dev_code`,d.`oil_code` AS `oil_code`,
+    d.`oil_name` AS `oil_name`,d.`vendor` AS `vendor`,d.`tank_capacity` AS `tank_capacity`,d.`remain_amount` AS `remain_amount`,
+    d.`bind_dept_id` AS `bind_dept_id`,d.`bind_time` AS `bind_time`,d.`bind_status` AS `bind_status`,d.`del_flag` AS `del_flag`,
+    d.`create_by` AS `create_by`,d.`create_time` AS `create_time`,d.`update_by` AS `update_by`,d.`update_time` AS `update_time` FROM `xt_oil_drum` d
+    LEFT JOIN `xt_report_alarm` r ON d.`bind_dev_code` = r.`dev_code`
+    WHERE r.`type` = 'insufficientOilAlarm' and r.dev_code = #{bindDevCode} and `del_flag` = 0
+    </select>
+
+
+</mapper>

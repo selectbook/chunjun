@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/main/css/element-ui.css" th:href="@{/main/css/element-ui.css}">
+    <link rel="stylesheet" href="../static/main/css/data-panel.css" th:href="@{/main/css/data-panel.css}">
+    <link rel="stylesheet" href="../static/main/css/common.css" th:href="@{/main/css/common.css}">
+    <title>数据面板</title>
+</head>
+<body>
+    <div id="app">
+        <div class="panel-header">
+            <div class="header-card" :class="item.bgColor" v-for="(item, index) in areas" :key="item.area">
+                <div class="header-card-top">
+                    <div class="card-info-area">区域: {{item.text}}</div>
+                    <div class="card-info-date" @click="toggleDate(event, index)" :class="item.textColor">
+                        <div class="date-btn" :class="item.activeId === 'day' ? 'active' : ''" data-id="day">日</div>
+                        <div class="date-btn" :class="item.activeId === 'month' ? 'active' : ''" data-id="month">月</div>
+                        <div class="date-btn" :class="item.activeId === 'year' ? 'active' : ''" data-id="year">年</div>
+                    </div>
+                </div>
+                <div class="header-card-bot">加油总量: {{item.amount}}</div>
+            </div>
+        </div>
+        <div class="panel-box">
+            <div class="box-left box-consumption">
+                <div class="box-consumption-header">
+                    <p>单位: 升</p>
+                    <h3>油品用量</h3>
+                    <div class="card-info-date">
+                        <div class="date-btn color-info" :class="tableDate === 'day' ? 'active' : ''" @click="toggleTaleDate('day')">日</div>
+                        <div class="date-btn color-info" :class="tableDate === 'month' ? 'active' : ''" @click="toggleTaleDate('month')">月</div>
+                        <div class="date-btn color-info" :class="tableDate === 'year' ? 'active' : ''" @click="toggleTaleDate('year')">年</div>
+                    </div>
+                </div>
+                <el-table :data="tableData" style="width: 100%" height="340">
+                    <el-table-column prop="brand" label="类型"></el-table-column>
+                    <el-table-column prop="north" label="华北"></el-table-column>
+                    <el-table-column prop="east" label="华东"></el-table-column>
+                    <el-table-column prop="south" label="华南"></el-table-column>
+                    <el-table-column prop="southwest" label="西南"></el-table-column>
+                    <el-table-column prop="northwest" label="西北"></el-table-column>
+                </el-table>
+            </div>
+            <div class="box-right box-consumption-chart"  style="width:33.33%; height:100%; padding: 10px; box-sizing: border-box;" ref="pipe">
+            </div>
+        </div>
+        <div class="panel-box">
+            <div class="box-left notification-box">
+                <h3 class="notification-header">消息通知</h3>
+                <ul class="msg-list">
+                    <li class="msg-item" v-for="(msg, index) in messageData" :key="msg.msg">
+                        <p class="msg-content"><i class="el-icon-s-promotion" :class="msg.type == 'normal' ? 'el-icon-s-promotion color-primary' : 'el-icon-warning color-danger'"></i>{{msg.msg}}</p>
+                        <p class="msg-status color-danger">New</p>
+                    </li>
+                </ul>
+                </div>
+                <div class="box-right other-info-box">
+                    <div class="device-info-box device-info-top">
+                        <h3>润滑油库存（桶）</h3>
+                        <div class="barrel-info">
+                        <div class="barrel-info-item">
+                            <p class="item-name color-info">剩余</p>
+                            <p class="item-value">{{drumStock.rest}}</p>
+                        </div>
+                        <div class="barrel-info-item">
+                            <p class="item-name color-info">消耗</p>
+                            <p class="item-value">{{drumStock.used}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" device-info-box device-info-bot">
+                    <h3>设备状况（台）</h3>
+                    <div class="device-info">
+                        <div class="device-info-item">
+                            <p class="item-value color-success">{{devicesStatus.onlineDevices}}</p>
+                            <p class="item-name color-info"><span class="bg-color-success"></span>在线</p>
+                        </div>
+                        <div class="device-info-item">
+                            <p class="item-value color-warning">{{devicesStatus.offlineDevices}}</p>
+                            <p class="item-name color-info"><span class="bg-color-warning"></span>离线</p>
+                        </div>
+                        <div class="device-info-item">
+                            <p class="item-value color-danger">{{devicesStatus.breakdownDevices}}</p>
+                            <p class="item-name color-info"><span class="bg-color-danger"></span>异常</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../static/main/js/vue@2.6.11.js" th:src="@{/main/js/vue@2.6.11.js}"></script>
+<script src="../static/main/js/element.js" th:src="@{/main/js/element.js}"></script>
+<script src="../static/main/js/echarts.js" th:src="@{/main/js/echarts.js}"></script>
+<script src="../static/main/js/axios.min.js" th:src="@{/main/js/axios.min.js}"></script>
+<script>
+    let vm = new Vue ({
+        name: 'Panel',
+        el: '#app',
+        data () {
+            return {
+                areas: [{
+                    area: 'south',
+                    text: '华南',
+                    activeId: 'day',
+                    amount: '',
+                    bgColor: 'bg-color-primary',
+                    textColor: 'color-primary'
+                }, {
+                    area: 'north',
+                    text: '华北',
+                    activeId: 'day',
+                    amount: '',
+                    bgColor: 'bg-color-success',
+                    textColor: 'color-success'
+                }, {
+                    area: 'east',
+                    text: '华东',
+                    activeId: 'day',
+                    amount: '',
+                    bgColor: 'bg-color-warning',
+                    textColor: 'color-warning'
+                }, {
+                    area: 'southwest',
+                    text: '西南',
+                    activeId: 'day',
+                    amount: '',
+                    bgColor: 'bg-color-danger',
+                    textColor: 'color-danger'
+                }, {
+                    area: 'northwest',
+                    text: '西北',
+                    activeId: 'day',
+                    amount: '',
+                    bgColor: 'bg-color-info',
+                    textColor: 'color-info'
+                }],
+                chartData: {
+                    title: {
+                        text: '润滑油用量',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        data: []
+                    },
+                    series: [
+                        {
+                            type: 'pie',
+                            radius: '65%',
+                            center: ['50%', '50%'],
+                            selectedMode: 'single',
+                            top: '10%',
+                            bottom: '10%',
+                            data: []
+                        }
+                    ]
+                },
+                tableData: [],
+                tableDate: 'day',
+                messageData: [{
+                    type: 'normal',
+                    msg: '您有一条信息未读，请尽快跟进',
+                    status: 'New'
+                }],
+                showHeader: false,
+                timeType: ['day', 'month', 'year'],
+                areasEnum: [{
+                    chinese: '华南',
+                    english: 'south',
+                    color: '#409EFF'
+                }, {
+                    chinese: '华北',
+                    english: 'north',
+                    color: '#67C23A'
+                }, {
+                    chinese: '华东',
+                    english: 'east',
+                    color: '#E6A23C'
+                }, {
+                    chinese: '西南',
+                    english: 'southwest',
+                    color: '#F56C6C'
+                }, {
+                    chinese: '西北',
+                    english: 'northwest',
+                    color: '#909399'
+                }],
+                drumStock: {
+                    rest: 0,
+                    used: 4
+                },
+                devicesStatus: {
+                    onlineDevices: 0,
+                    offlineDevices: 2,
+                    breakdownDevices: 0
+                },
+                myChart: {}
+            }
+        },
+        mounted () {
+            this.myChart = echarts.init(this.$refs['pipe'])
+            this.getDevicesStatus()
+            this.getDrumStock()
+            this.getAmountByArea()
+            this.getFillDataByOilName()
+            this.getAmountByTimeAndArea(undefined, 'day')
+        },
+        methods: {
+            toggleDate ($event, index) {
+                let time = $event['target'].dataset.id
+                let item = this.areas[index]
+                if (this.areas[index].activeId != time) {
+                    item.activeId = time
+                    this.getAmountByTimeAndArea(item.area, time, index)
+                }
+            },
+            toggleTaleDate (time) { 
+                if (this.tableDate != time) {
+                    this.tableDate = time
+                    this.getFillDataByOilName(time)
+                }
+            },
+            getDevicesStatus () { // 获取设备状态
+                axios({
+                    method: 'GET',
+                    url: '/business/device/amountByStatus',
+                    headers: {
+                        token: '460530b4a0404507bccc02c14501f171'
+                    }
+                }).then(res => {
+                    this.devicesStatus = res.data.data
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            getDrumStock () { // 获取剩余和消耗量
+                axios({
+                    method: 'GET',
+                    url: '/business/oilDrum/drumStock'
+                }).then(res => {
+                    this.drumStock = res.data.data
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            getAmountByArea () { // 润滑油用量 饼图
+                axios({
+                    method: 'get',
+                    url: '/business/oilFill/amountByArea'
+                }).then(res => {
+                    let data = res.data.data
+                    let keys = Object.keys(data)
+                    let chart = this.chartData
+                    chart.legend.data = []
+                    chart.series[0].data = []
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i]
+                        let item = this.areasEnum.find(item => item.english == key.slice(0, key.indexOf('Amount')))
+                        chart.legend.data.push(item.chinese)
+                        chart.series[0].data.push({
+                            value: data[key],
+                            name: item.chinese, 
+                            itemStyle: {color: item.color}
+                        })
+                    }
+                    this.myChart.setOption(this.chartData)
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            getAmountByTimeAndArea (area, timeType = 'day', index = 0) { // 时间和区域下的加注总量
+                if (!area) {
+                    let promises = []
+                    promises.push(axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=south&timeType=${timeType}`
+                    }))
+                    promises.push(axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=north&timeType=${timeType}`
+                    }))
+                    promises.push(axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=east&timeType=${timeType}`
+                    }))
+                    promises.push(axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=southwest&timeType=${timeType}`
+                    }))
+                    promises.push(axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=northwest&timeType=${timeType}`
+                    }))
+                    Promise.all(promises).then(res => {
+                        for (let i = 0; i < this.areas.length; i++) {
+                            this.areas[i].amount = res[i].data.data.amountByTimeAndArea
+                        }
+                    })
+                } else {
+                    axios({
+                        method: 'GET',
+                        url: `/business/oilFill/amountByTimeAndArea?area=${area}&timeType=${timeType}`
+                    }).then(res => {
+                        this.areas[index].amount = res.data.data.amountByTimeAndArea
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                }
+            },
+            getFillDataByOilName (timeType = 'day') { // 油品用量
+                axios({
+                    method: 'GET',
+                    url: `/business/oilFill/fillDataByOilName?timeType=${timeType}`,
+                }).then(res => {  
+                    let data = res.data.data
+                    let keys = Object.keys(data)
+                    this.tableData = []
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i]
+                        let item = data[key]
+                        let obj = {
+                            brand: key,
+                            ...item
+                        }
+                        this.tableData.push(obj)
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+        }
+    })
+</script>
+</html>

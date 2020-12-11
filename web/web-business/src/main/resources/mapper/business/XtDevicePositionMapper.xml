@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iiot.business.mapper.XtDevicePositionMapper">
+
+    <resultMap type="XtDevicePosition" id="XtDevicePositionResult">
+        <result property="id" column="id"/>
+        <result property="deviceCode" column="device_code"/>
+        <result property="ipaddr" column="ipaddr"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="gpsTime" column="gps_time"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectXtDevicePositionVo">
+        select id, device_code, ipaddr, latitude, longitude, gps_time, province, city, address, del_flag, create_by, create_time, update_by, update_time from xt_device_position
+    </sql>
+
+
+
+    <select id="selectXtDevicePositionList" parameterType="XtDevicePosition" resultMap="XtDevicePositionResult">
+        SELECT p.`id` AS `id`,p.`device_code` AS `device_code`,p.`ipaddr` AS `ipaddr`,
+        p.`latitude` AS `latitude`,p.`longitude` AS `longitude`,p.`gps_time` AS `gps_time`,
+        p.`province` AS `province`,p.`city` AS `city`,p.`address` AS `address`,p.`del_flag` AS `del_flag`,
+        p.`del_flag` AS `del_flag`,p.`create_by` AS `create_by`,p.`create_time` AS `create_time`,
+        p.`update_by` AS `update_by`,p.`update_time` AS `update_time` FROM `xt_device_position` p
+        LEFT JOIN `xt_device` d ON  d.`dev_code` = p.`device_code`
+        WHERE p.`del_flag` = 0
+            <if test="deviceCode != null  and deviceCode != ''">and device_code = #{deviceCode}</if>
+            <if test="ipaddr != null  and ipaddr != ''">and ipaddr = #{ipaddr}</if>
+            <if test="latitude != null  and latitude != ''">and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''">and longitude = #{longitude}</if>
+            <if test="gpsTime != null ">and gps_time = #{gpsTime}</if>
+            <if test="province != null  and province != ''">and province = #{province}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+        ${params.dataScope}
+    </select>
+
+    <select id="selectXtDevicePositionById" parameterType="Long" resultMap="XtDevicePositionResult">
+        <include refid="selectXtDevicePositionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertXtDevicePosition" parameterType="XtDevicePosition" useGeneratedKeys="true" keyProperty="id">
+        insert into xt_device_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null  and deviceCode != ''">device_code,</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="latitude != null  and latitude != ''">latitude,</if>
+            <if test="longitude != null  and longitude != ''">longitude,</if>
+            <if test="gpsTime != null ">gps_time,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceCode != null  and deviceCode != ''">#{deviceCode},</if>
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="latitude != null  and latitude != ''">#{latitude},</if>
+            <if test="longitude != null  and longitude != ''">#{longitude},</if>
+            <if test="gpsTime != null ">#{gpsTime},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateXtDevicePosition" parameterType="XtDevicePosition">
+        update xt_device_position
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceCode != null  and deviceCode != ''">device_code = #{deviceCode},</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr = #{ipaddr},</if>
+            <if test="latitude != null  and latitude != ''">latitude = #{latitude},</if>
+            <if test="longitude != null  and longitude != ''">longitude = #{longitude},</if>
+            <if test="gpsTime != null ">gps_time = #{gpsTime},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXtDevicePositionById" parameterType="Long">
+        delete from xt_device_position where id = #{id}
+    </delete>
+
+    <delete id="deleteXtDevicePositionByIds" parameterType="String">
+        delete from xt_device_position where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPositionCount" resultType="Integer">
+        select
+        count(id)
+        from
+        xt_device_position
+        <where>
+            <if test="devCode != null and devCode != ''">and device_code = #{devCode}</if>
+            <if test="gpsTime != null ">and gps_time = #{gpsTime}</if>
+        </where>
+    </select>
+
+    <!-- 批量新增设备定位字段 -->
+    <insert id="insertDevicePositionBatch" parameterType="java.util.List" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into xt_device_position
+        (
+        device_code,
+        ipaddr,
+        latitude,
+        longitude,
+        gps_time,
+        province,
+        city,
+        address,
+        del_flag,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+        )
+        <foreach collection="devicePositionList" item="item" open="VALUES" close=";" separator=",">
+            (
+            #{item.deviceCode},
+            #{item.ipaddr},
+            #{item.latitude},
+            #{item.longitude},
+            #{item.gpsTime},
+            #{item.province},
+            #{item.city},
+            #{item.address},
+            #{item.delFlag},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.updateBy},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="selectPositionByDevCodes" parameterType="Long" resultMap="XtDevicePositionResult">
+         SELECT p.`id` AS `id`,p.`device_code` AS `device_code`,p.`ipaddr` AS `ipaddr`,
+        p.`latitude` AS `latitude`,p.`longitude` AS `longitude`,p.`gps_time` AS `gps_time`,
+        p.`province` AS `province`,p.`city` AS `city`,p.`address` AS `address`,p.`del_flag` AS `del_flag`,
+        p.`del_flag` AS `del_flag`,p.`create_by` AS `create_by`,p.`create_time` AS `create_time`,
+        p.`update_by` AS `update_by`,p.`update_time` AS `update_time` FROM `xt_device_position` p
+        LEFT JOIN `xt_device` d ON  d.`dev_code` = p.`device_code`
+        WHERE p.`del_flag` = 0 and d.`dept_id` = #{deptId}
+    </select>
+
+
+    <select id="selectXtDevicePositionGroupAll" resultMap="XtDevicePositionResult" parameterType="XtDevicePosition">
+        <!--这段为了解决生产环境mysql8和其他测试环境mysql版本不一样,导致的分组语法错误-->
+        SELECT test.id,test.device_code,test.ipaddr,test.`latitude`,test.`longitude`,test.`gps_time`,test.`province`,test.`city`,test.`address`,test.`del_flag`,test.`create_by`,test.`create_time`,test.`update_by`,test.`update_time` FROM
+        (SELECT xt.`id` AS id,xt.`device_code`AS device_code,xt.`ipaddr` AS ipaddr,xt.`latitude` AS latitude,xt.`longitude` AS longitude,MAX(xt.`gps_time`) AS gps_time,xt.`province` AS province,xt.`city` AS city,xt.`address` AS address,xt.`del_flag` AS del_flag,xt.`create_by` AS create_by,xt.`create_time` AS create_time,xt.`update_by` AS update_by,xt.`update_time` AS  update_time
+        FROM `xt_device_position` AS xt GROUP BY device_code ) test
+        LEFT JOIN `xt_device` d ON d.`dev_code` = test.device_code
+        WHERE test.`del_flag` = 0
+        <if test="deviceCode != null  and deviceCode != ''">and device_code = #{deviceCode}</if>
+         ${params.dataScope}
+    </select>
+
+
+    <select id="selectXtDevicePositionGroupByCode" resultMap="XtDevicePositionResult" parameterType="Long">
+        <!--这段为了解决生产环境mysql8和其他测试环境mysql版本不一样,导致的分组语法错误-->
+        SELECT test.id,test.device_code,test.ipaddr,test.`latitude`,test.`longitude`,test.`gps_time`,test.`province`,test.`city`,test.`address`,test.`del_flag`,test.`create_by`,test.`create_time`,test.`update_by`,test.`update_time` FROM
+        (SELECT xt.`id` AS id,xt.`device_code`AS device_code,xt.`ipaddr` AS ipaddr,xt.`latitude` AS latitude,xt.`longitude` AS longitude,MAX(xt.`gps_time`) AS gps_time,xt.`province` AS province,xt.`city` AS city,xt.`address` AS address,xt.`del_flag` AS del_flag,xt.`create_by` AS create_by,xt.`create_time` AS create_time,xt.`update_by` AS update_by,xt.`update_time` AS  update_time
+        FROM `xt_device_position` AS xt GROUP BY device_code ) test
+        LEFT JOIN `xt_device` d ON d.`dev_code` = test.device_code
+        WHERE test.`del_flag` = 0
+            and d.dept_id  IN (
+            SELECT dept_id FROM `sys_dept`
+            WHERE dept_id = #{deptId}
+            UNION ALL
+            SELECT d.dept_id FROM `sys_dept` d
+            WHERE d.`ancestors` like concat('%','${deptId}','%'))
+        <if test="deviceCode != null  and deviceCode != ''">and device_code = #{deviceCode}</if>
+           <!-- ${params.dataScope}-->
+    </select>
+
+
+
+</mapper>
