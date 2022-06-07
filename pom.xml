@@ -5,13 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.iiot</groupId>
-    <artifactId>IIOTCloud</artifactId>
+    <artifactId>chunjun</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>algorithm</module>
-        <module>commCommon</module>
-        <module>jedis</module>
+        <module>commonbase</module>
         <module>jdbc</module>
         <module>queue</module>
         <module>common</module>
@@ -20,7 +18,6 @@
         <module>stream</module>
 		<module>web</module>
         <module>warehouse</module>
-
     </modules>
 
 
