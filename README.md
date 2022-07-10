@@ -7,30 +7,30 @@ chunjun(纯钧) 是一个基于Java, Soring Boot, Netty, Reactor, Hive, Spark, F
 
 ![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_1.png)
 
-![ChunJun 能够做什么](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_2.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_2.png)
 
-![ChunJun 的建设理念是什么](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_3.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_3.png)
 
-![ChunJun 能够给客户带来什么价值](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_4.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_4.png)
 
-![ChunJun 的发展方向是什么](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_5.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_5.png)
 
 ## 产品架构
 
-![系统架构](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_6.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_6.png)
 
-![技术选型](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_7.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_7.png)
 
-![数据流图](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_8.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_8.png)
 
-![平台优势](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_9.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_9.png)
 
 ## 行业案例
 
-![智慧虫控](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_10.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_10.png)
 
-![智慧虫控](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_11.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_11.png)
 
-![智能加注机](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_12.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_12.png)
 
-![共享书架](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_13.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_13.png)
