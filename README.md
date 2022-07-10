@@ -5,7 +5,7 @@ chunjun(纯钧) 是一个基于Java, Soring Boot, Netty, Reactor, Hive, Spark, F
 
 ## 产品理念
 
-![ChunJun 是什么](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_1.png)
+![image](https://github.com/selectbook/chunjun/blob/main/web/web-admin/src/main/resources/static/img/chunjun_1.png)
 
 ![ChunJun 能够做什么](https://lingshou-1305893078.cos.ap-guangzhou.myqcloud.com/chunjun_2.png)
 
